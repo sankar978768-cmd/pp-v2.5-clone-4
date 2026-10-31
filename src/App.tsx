@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { BirdId, Jama, PakshaType, DayOfWeek, DayCalculationMeta } from './types';
 import { BIRDS } from './data/panchaPakshiData';
 import { recalculateJamas } from './utils/calculator';
@@ -57,10 +57,37 @@ export default function App() {
     return 'jamas';
   });
 
+  // Track scroll position per tab so switching screens remembers where last scrolled
+  const tabScrollPositions = useRef<Record<BottomNavTab, number>>({
+    jamas: 0,
+    bird: 0,
+    location: 0,
+    calendar: 0,
+  });
+
+  // Keep active tab's scroll position updated on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      tabScrollPositions.current[activeTab] = window.scrollY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeTab]);
+
   const handleSelectTab = (tab: BottomNavTab) => {
+    if (tab === activeTab) return;
+    // 1. Save current tab's scroll position
+    tabScrollPositions.current[activeTab] = window.scrollY;
+
+    // 2. Switch tab
     setActiveTab(tab);
     localStorage.setItem('pancha_active_tab', tab);
-    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // 3. Restore target tab's last scrolled position
+    const targetY = tabScrollPositions.current[tab] ?? 0;
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: targetY, behavior: 'instant' });
+    });
   };
 
   const [selectedBird, setSelectedBird] = useState<BirdId>(() => {
@@ -496,7 +523,7 @@ export default function App() {
       />
 
       {/* Main View Area with Dedicated Independent Screen Components */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-5 lg:px-6 pt-22 sm:pt-24 pb-24 sm:pb-22">
+      <main className="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-5 lg:px-6 pt-16 pb-16">
         {/* Screen 1: 10 Jamas Screen */}
         {activeTab === 'jamas' && (
           <JamasScreen

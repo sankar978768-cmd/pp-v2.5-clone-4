@@ -15,6 +15,7 @@ export interface FixedBottomNavProps {
   selectedCalendarDate: Date | null;
   selectedPaksha?: PakshaType;
   selectedDay?: DayOfWeek;
+  variant?: 'default' | 'compact';
 }
 
 export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
@@ -25,6 +26,7 @@ export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
   selectedCalendarDate,
   selectedPaksha,
   selectedDay,
+  variant = 'compact',
 }) => {
   const { language, getBirdName, getDayShortName } = useLanguage();
 
@@ -94,10 +96,14 @@ export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
   return (
     <nav
       id="fixed-bottom-nav"
-      className="fixed bottom-0 left-0 right-0 z-40 w-full bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-t border-[#E8DFCE] dark:border-slate-800 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_16px_rgba(0,0,0,0.5)] transition-colors duration-150 pb-[max(0.35rem,env(safe-area-inset-bottom))]"
+      className={`fixed bottom-0 left-0 right-0 z-40 w-full bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-t border-[#E8DFCE] dark:border-slate-800 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_-2px_10px_rgba(0,0,0,0.4)] transition-colors duration-150 ${
+        variant === 'compact'
+          ? 'pb-[max(0.15rem,env(safe-area-inset-bottom))]'
+          : 'pb-[max(0.35rem,env(safe-area-inset-bottom))]'
+      }`}
       aria-label="Mobile Bottom Navigation Bar"
     >
-      <div className="max-w-4xl mx-auto px-2 sm:px-4">
+      <div className="max-w-4xl mx-auto px-1.5 sm:px-3">
         <div className="grid grid-cols-4 w-full">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
@@ -107,7 +113,11 @@ export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
                 type="button"
                 id={`bottom-nav-tab-${item.id}`}
                 onClick={() => onSelectTab(item.id)}
-                className={`min-h-[48px] relative flex flex-col items-center justify-center gap-1 py-1.5 sm:py-2 px-1 text-center transition-all duration-200 cursor-pointer touch-manipulation select-none ${
+                className={`min-h-[44px] relative flex flex-col items-center justify-center text-center transition-all duration-150 cursor-pointer touch-manipulation select-none ${
+                  variant === 'compact'
+                    ? 'py-1 px-0.5 sm:px-1 gap-0.5'
+                    : 'py-1.5 sm:py-2 px-1 gap-1 min-h-[48px]'
+                } ${
                   isActive
                     ? 'text-[#1B4332] dark:text-emerald-400 font-extrabold bg-[#1B4332]/8 dark:bg-emerald-500/15'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-slate-900/60 font-medium'
@@ -118,12 +128,18 @@ export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
               >
                 {/* Active Top Highlight Indicator */}
                 {isActive && (
-                  <span className="absolute top-0 left-2 right-2 h-[3px] rounded-full bg-[#1B4332] dark:bg-emerald-400 shadow-xs" />
+                  <span
+                    className={`absolute top-0 left-2 right-2 rounded-full bg-[#1B4332] dark:bg-emerald-400 shadow-xs ${
+                      variant === 'compact' ? 'h-[2px]' : 'h-[3px]'
+                    }`}
+                  />
                 )}
 
                 {item.isBird ? (
                   <span
-                    className={`text-lg sm:text-xl leading-none select-none transition-all duration-200 shrink-0 flex items-center justify-center ${
+                    className={`leading-none select-none transition-all duration-150 shrink-0 flex items-center justify-center ${
+                      variant === 'compact' ? 'text-base sm:text-lg' : 'text-lg sm:text-xl'
+                    } ${
                       isActive ? 'scale-110 drop-shadow-xs' : 'opacity-85'
                     }`}
                     aria-hidden="true"
@@ -133,8 +149,12 @@ export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
                 ) : item.Icon ? (
                   <div className="relative flex items-center justify-center">
                     <item.Icon
-                      className={`transition-all duration-200 shrink-0 ${
-                        isActive
+                      className={`transition-all duration-150 shrink-0 ${
+                        variant === 'compact'
+                          ? isActive
+                            ? 'w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#1B4332] dark:text-emerald-400 scale-105'
+                            : 'w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 dark:text-slate-400'
+                          : isActive
                           ? 'w-5 h-5 text-[#1B4332] dark:text-emerald-400 scale-105'
                           : 'w-4 h-4 sm:w-4.5 sm:h-4.5 text-slate-500 dark:text-slate-400'
                       }`}
@@ -150,7 +170,11 @@ export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
                 ) : null}
 
                 <span
-                  className={`text-[10px] sm:text-[11px] tracking-tight truncate max-w-full transition-colors ${
+                  className={`tracking-tight truncate max-w-full transition-colors ${
+                    variant === 'compact'
+                      ? 'text-[9px] sm:text-[10px] leading-tight'
+                      : 'text-[10px] sm:text-[11px]'
+                  } ${
                     isActive
                       ? 'text-[#1B4332] dark:text-emerald-300 font-black'
                       : 'text-slate-700 dark:text-slate-400 font-medium'

@@ -15,12 +15,14 @@ interface BirdRelationshipsViewProps {
   selectedBird: BirdId;
   onSelectBird: (birdId: BirdId) => void;
   paksha?: PakshaType;
+  hideCompatibilityInspector?: boolean;
 }
 
 export const BirdRelationshipsView: React.FC<BirdRelationshipsViewProps> = ({
   selectedBird,
   onSelectBird,
   paksha = 'valarpirai',
+  hideCompatibilityInspector = false,
 }) => {
   const {
     language,
@@ -441,107 +443,109 @@ export const BirdRelationshipsView: React.FC<BirdRelationshipsViewProps> = ({
       </div>
 
       {/* Interactive Pair Compatibility Checker */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ArrowRightLeft className="w-4 h-4 text-amber-400" />
-            <h4 className="text-sm font-bold text-white">
-              {t('compatibilityInspectorTitle')}
-            </h4>
-          </div>
-          <span className="text-xs text-slate-400 font-mono">
-            {getPakshaName(activePaksha)}
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
-          {/* Bird A selector */}
-          <div className="lg:col-span-2 space-y-1.5">
-            <label className="text-xs text-slate-400 font-medium">{t('primaryBirdLabel')}</label>
-            <select
-              value={compareBirdA}
-              onChange={(e) => setCompareBirdA(e.target.value as BirdId)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white font-semibold focus:outline-none focus:ring-1 focus:ring-amber-400"
-            >
-              {ALL_BIRD_IDS.map((id) => (
-                <option key={id} value={id}>
-                  {getBirdName(id)}
-                </option>
-              ))}
-            </select>
+      {!hideCompatibilityInspector && (
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ArrowRightLeft className="w-4 h-4 text-amber-400" />
+              <h4 className="text-sm font-bold text-white">
+                {t('compatibilityInspectorTitle')}
+              </h4>
+            </div>
+            <span className="text-xs text-slate-400 font-mono">
+              {getPakshaName(activePaksha)}
+            </span>
           </div>
 
-          {/* Center vs icon */}
-          <div className="flex justify-center text-slate-500">
-            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-amber-400 border border-slate-700">
-              VS
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
+            {/* Bird A selector */}
+            <div className="lg:col-span-2 space-y-1.5">
+              <label className="text-xs text-slate-400 font-medium">{t('primaryBirdLabel')}</label>
+              <select
+                value={compareBirdA}
+                onChange={(e) => setCompareBirdA(e.target.value as BirdId)}
+                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white font-semibold focus:outline-none focus:ring-1 focus:ring-amber-400"
+              >
+                {ALL_BIRD_IDS.map((id) => (
+                  <option key={id} value={id}>
+                    {getBirdName(id)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Center vs icon */}
+            <div className="flex justify-center text-slate-500">
+              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-amber-400 border border-slate-700">
+                VS
+              </div>
+            </div>
+
+            {/* Bird B selector */}
+            <div className="lg:col-span-2 space-y-1.5">
+              <label className="text-xs text-slate-400 font-medium">{t('secondaryBirdLabel')}</label>
+              <select
+                value={compareBirdB}
+                onChange={(e) => setCompareBirdB(e.target.value as BirdId)}
+                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white font-semibold focus:outline-none focus:ring-1 focus:ring-amber-400"
+              >
+                {ALL_BIRD_IDS.map((id) => (
+                  <option key={id} value={id}>
+                    {getBirdName(id)}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* Bird B selector */}
-          <div className="lg:col-span-2 space-y-1.5">
-            <label className="text-xs text-slate-400 font-medium">{t('secondaryBirdLabel')}</label>
-            <select
-              value={compareBirdB}
-              onChange={(e) => setCompareBirdB(e.target.value as BirdId)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white font-semibold focus:outline-none focus:ring-1 focus:ring-amber-400"
-            >
-              {ALL_BIRD_IDS.map((id) => (
-                <option key={id} value={id}>
-                  {getBirdName(id)}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Mutual Result Box */}
-        <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {/* A to B */}
-            <div className="p-3 rounded-lg bg-slate-900 border border-slate-800">
-              <div className="text-[11px] text-slate-400 mb-1">
-                {language === 'ta'
-                  ? `${getBirdName(compareBirdA)} பட்சியின் பார்வை ${getBirdName(compareBirdB)} மீது:`
-                  : `${getBirdName(compareBirdA)}'s perspective toward ${getBirdName(compareBirdB)}:`}
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`px-2.5 py-1 rounded-md text-xs font-bold border ${RELATIONSHIP_META[relAtoB].badgeBg} ${RELATIONSHIP_META[relAtoB].badgeText} ${RELATIONSHIP_META[relAtoB].badgeBorder}`}
-                >
-                  {getRelationshipName(relAtoB)}
-                </span>
-                <span className="text-xs text-slate-300">
+          {/* Mutual Result Box */}
+          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {/* A to B */}
+              <div className="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                <div className="text-[11px] text-slate-400 mb-1">
                   {language === 'ta'
-                    ? (relAtoB === 'friend' ? 'மிகவும் சாதகமானது, வெற்றி தரும்' : relAtoB === 'enemy' ? 'சாதகமற்றது, தடைகள் வரலாம்' : 'சமநிலை பலன்கள்')
-                    : RELATIONSHIP_META[relAtoB].description}
-                </span>
+                    ? `${getBirdName(compareBirdA)} பட்சியின் பார்வை ${getBirdName(compareBirdB)} மீது:`
+                    : `${getBirdName(compareBirdA)}'s perspective toward ${getBirdName(compareBirdB)}:`}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`px-2.5 py-1 rounded-md text-xs font-bold border ${RELATIONSHIP_META[relAtoB].badgeBg} ${RELATIONSHIP_META[relAtoB].badgeText} ${RELATIONSHIP_META[relAtoB].badgeBorder}`}
+                  >
+                    {getRelationshipName(relAtoB)}
+                  </span>
+                  <span className="text-xs text-slate-300">
+                    {language === 'ta'
+                      ? (relAtoB === 'friend' ? 'மிகவும் சாதகமானது, வெற்றி தரும்' : relAtoB === 'enemy' ? 'சாதகமற்றது, தடைகள் வரலாம்' : 'சமநிலை பலன்கள்')
+                      : RELATIONSHIP_META[relAtoB].description}
+                  </span>
+                </div>
               </div>
-            </div>
 
-            {/* B to A */}
-            <div className="p-3 rounded-lg bg-slate-900 border border-slate-800">
-              <div className="text-[11px] text-slate-400 mb-1">
-                {language === 'ta'
-                  ? `${getBirdName(compareBirdB)} பட்சியின் பார்வை ${getBirdName(compareBirdA)} மீது:`
-                  : `${getBirdName(compareBirdB)}'s perspective toward ${getBirdName(compareBirdA)}:`}
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`px-2.5 py-1 rounded-md text-xs font-bold border ${RELATIONSHIP_META[relBtoA].badgeBg} ${RELATIONSHIP_META[relBtoA].badgeText} ${RELATIONSHIP_META[relBtoA].badgeBorder}`}
-                >
-                  {getRelationshipName(relBtoA)}
-                </span>
-                <span className="text-xs text-slate-300">
+              {/* B to A */}
+              <div className="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                <div className="text-[11px] text-slate-400 mb-1">
                   {language === 'ta'
-                    ? (relBtoA === 'friend' ? 'மிகவும் சாதகமானது, வெற்றி தரும்' : relBtoA === 'enemy' ? 'சாதகமற்றது, தடைகள் வரலாம்' : 'சமநிலை பலன்கள்')
-                    : RELATIONSHIP_META[relBtoA].description}
-                </span>
+                    ? `${getBirdName(compareBirdB)} பட்சியின் பார்வை ${getBirdName(compareBirdA)} மீது:`
+                    : `${getBirdName(compareBirdB)}'s perspective toward ${getBirdName(compareBirdA)}:`}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`px-2.5 py-1 rounded-md text-xs font-bold border ${RELATIONSHIP_META[relBtoA].badgeBg} ${RELATIONSHIP_META[relBtoA].badgeText} ${RELATIONSHIP_META[relBtoA].badgeBorder}`}
+                  >
+                    {getRelationshipName(relBtoA)}
+                  </span>
+                  <span className="text-xs text-slate-300">
+                    {language === 'ta'
+                      ? (relBtoA === 'friend' ? 'மிகவும் சாதகமானது, வெற்றி தரும்' : relBtoA === 'enemy' ? 'சாதகமற்றது, தடைகள் வரலாம்' : 'சமநிலை பலன்கள்')
+                      : RELATIONSHIP_META[relBtoA].description}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

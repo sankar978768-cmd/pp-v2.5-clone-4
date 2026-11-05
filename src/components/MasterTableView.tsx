@@ -28,7 +28,7 @@ export const MasterTableView: React.FC<MasterTableViewProps> = ({
   return (
     <div id="master-table-view" className="space-y-4">
       {/* Header Controls & Filter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FAF6EF] dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs">
         <div>
           <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span>{t('masterTableTitle')}</span>
@@ -44,7 +44,7 @@ export const MasterTableView: React.FC<MasterTableViewProps> = ({
         </div>
 
         {/* Filter buttons */}
-        <div className="flex items-center gap-1.5 bg-[#FAF6EE] dark:bg-slate-950 p-1 rounded-xl border border-[#E8DFCE] dark:border-slate-800 text-xs self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 bg-[#EFE7DA] dark:bg-slate-950 p-1 rounded-xl border border-[#D9CFBD] dark:border-slate-800 text-xs self-start sm:self-auto">
           <button
             onClick={() => setJamaFilter('all')}
             id="master-filter-all"
@@ -84,7 +84,7 @@ export const MasterTableView: React.FC<MasterTableViewProps> = ({
       </div>
 
       {/* Rules & Terminology Reference Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-[#FFFDF9] dark:bg-slate-950/60 p-4 rounded-2xl border border-[#E8DFCE] dark:border-slate-800/80">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-[#FAF6EF] dark:bg-slate-950/60 p-4 rounded-2xl border border-[#D9CFBD] dark:border-slate-800/80">
         <div>
           <span className="font-bold text-[#C29738] dark:text-amber-400 flex items-center gap-1.5 mb-1">
             <Sun className="w-3.5 h-3.5 text-[#C29738]" strokeWidth={1.5} />
@@ -111,10 +111,10 @@ export const MasterTableView: React.FC<MasterTableViewProps> = ({
         {filteredJamas.map((jama) => (
           <div
             key={jama.jamaNumber}
-            className="bg-white dark:bg-slate-900/70 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 overflow-hidden shadow-xs"
+            className="bg-[#FAF6EF] dark:bg-slate-900/70 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 overflow-hidden shadow-xs"
           >
             {/* Jama banner */}
-            <div className="bg-[#FAF6EE] dark:bg-slate-900 px-4 sm:px-5 py-3 border-b border-[#E8DFCE] dark:border-slate-800 flex items-center justify-between">
+            <div className="bg-[#EFE7DA]/70 dark:bg-slate-900 px-4 sm:px-5 py-3 border-b border-[#D9CFBD] dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span
                   className={`w-2 h-2 rounded-full ${
@@ -126,7 +126,7 @@ export const MasterTableView: React.FC<MasterTableViewProps> = ({
                   ({jama.startTime} – {jama.endTime})
                 </span>
               </div>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-[#E8DFCE] dark:border-slate-700">
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF6EF] dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-[#D9CFBD] dark:border-slate-700">
                 {jama.isDay ? t('dayPeriod') : t('nightPeriod')}
               </span>
             </div>
@@ -135,7 +135,7 @@ export const MasterTableView: React.FC<MasterTableViewProps> = ({
             <div className="overflow-x-auto">
               <div className="min-w-[960px]">
                 {/* 5 Column Headers */}
-                <div className="grid grid-cols-5 divide-x divide-[#E8DFCE] dark:divide-slate-800 bg-[#FAF6EE]/80 dark:bg-slate-950/80 border-b border-[#E8DFCE] dark:border-slate-800 text-xs font-bold">
+                <div className="grid grid-cols-5 divide-x divide-[#D9CFBD] dark:divide-slate-800 bg-[#EFE7DA]/80 dark:bg-slate-950/80 border-b border-[#D9CFBD] dark:border-slate-800 text-xs font-bold">
                   {birdKeys.map((bKey) => {
                     const col = jama.columns[bKey];
                     const bInfo = BIRDS[bKey];
@@ -176,7 +176,7 @@ export const MasterTableView: React.FC<MasterTableViewProps> = ({
                 {[0, 1, 2, 3, 4].map((subRowIdx) => (
                   <div
                     key={subRowIdx}
-                    className="grid grid-cols-5 divide-x divide-[#E8DFCE]/60 dark:divide-slate-800/80 border-b border-[#E8DFCE]/60 dark:border-slate-800/60 last:border-b-0 text-xs"
+                    className="grid grid-cols-5 divide-x divide-[#D9CFBD]/60 dark:divide-slate-800/80 border-b border-[#D9CFBD]/60 dark:border-slate-800/60 last:border-b-0 text-xs"
                   >
                     {birdKeys.map((bKey) => {
                       const sp = jama.columns[bKey].subPeriods[subRowIdx];
@@ -191,7 +191,7 @@ export const MasterTableView: React.FC<MasterTableViewProps> = ({
                           className={`p-2.5 transition-colors ${
                             isSelected
                               ? 'bg-[#1B4332]/5 hover:bg-[#1B4332]/10'
-                              : 'hover:bg-[#FAF6EE]/50 dark:hover:bg-slate-900/40'
+                              : 'hover:bg-[#EFE7DA]/50 dark:hover:bg-slate-900/40'
                           }`}
                         >
                           <div className="flex items-center justify-between">

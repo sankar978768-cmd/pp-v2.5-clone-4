@@ -495,7 +495,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF6EE] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-[#1B4332] selection:text-white transition-colors duration-150">
+    <div className="min-h-screen bg-[#EFE9DE] dark:bg-slate-950 text-[#23201C] dark:text-slate-100 flex flex-col font-sans selection:bg-[#1B4332] selection:text-white transition-colors duration-150">
       {/* Fixed Top Header */}
       <FixedTopHeader
         onOpenSideMenu={() => openDrawerWithCategory('all')}
@@ -603,6 +603,14 @@ export default function App() {
             onCustomDayUploaded={handleCustomDayUploaded}
             onOpenCalendar={() => setIsCalendarModalOpen(true)}
             selectedDate={selectedCalendarDate}
+            locationLat={locationLat}
+            locationLng={locationLng}
+            locationName={locationName}
+            locationTimezoneOffset={locationTimezoneOffset}
+            timeDisplayMode={timeDisplayMode}
+            sunriseTime={displaySunrise}
+            sunsetTime={displaySunset}
+            nextSunriseTime={displayNextSunrise}
           />
         )}
       </main>
@@ -688,6 +696,14 @@ export default function App() {
         currentDay={selectedDay}
         onSelectPakshaAndDay={handleSelectPakshaAndDay}
         selectedDate={selectedCalendarDate}
+        locationLat={locationLat}
+        locationLng={locationLng}
+        locationName={locationName}
+        locationTimezoneOffset={locationTimezoneOffset}
+        timeDisplayMode={timeDisplayMode}
+        sunriseTime={displaySunrise}
+        sunsetTime={displaySunset}
+        nextSunriseTime={displayNextSunrise}
       />
 
       {/* Quick Bird Selection Modal */}

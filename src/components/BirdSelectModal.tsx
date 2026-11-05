@@ -52,11 +52,11 @@ export const BirdSelectModal: React.FC<BirdSelectModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm sm:max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all"
+        className="w-full max-w-sm sm:max-w-md bg-[#FAF6EF] dark:bg-slate-900 rounded-2xl shadow-2xl border border-[#D9CFBD] dark:border-slate-800 overflow-hidden transform transition-all"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[#D9CFBD] dark:border-slate-800 bg-[#EFE7DA]/70 dark:bg-slate-900/80">
           <div className="flex items-center gap-2">
             <span className="text-xl" aria-hidden="true">
               {BIRD_EMOJIS[selectedBird] || '🐦'}
@@ -73,7 +73,7 @@ export const BirdSelectModal: React.FC<BirdSelectModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-[#EFE7DA] dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-4 h-4" />
@@ -98,7 +98,7 @@ export const BirdSelectModal: React.FC<BirdSelectModalProps> = ({
                 className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer text-left active:scale-[0.98] ${
                   isSelected
                     ? 'bg-amber-500/10 dark:bg-amber-400/15 border-amber-500 dark:border-amber-400 ring-2 ring-amber-500/30'
-                    : 'bg-white dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200'
+                    : 'bg-[#FAF6EF] dark:bg-slate-800/50 hover:bg-[#EFE7DA] dark:hover:bg-slate-800 border-[#D9CFBD] dark:border-slate-800 text-slate-800 dark:text-slate-200'
                 }`}
               >
                 <div className="flex items-center gap-3">

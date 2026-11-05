@@ -195,10 +195,10 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
         role="dialog"
         aria-modal="true"
         aria-label="Pancha Pakshi Side Menu"
-        className="fixed inset-y-0 left-0 w-full max-w-md sm:max-w-lg bg-[#FAF6EE] dark:bg-slate-900 border-r border-[#E8DFCE] dark:border-slate-800 shadow-2xl flex flex-col z-50 transform transition-transform duration-300 ease-in-out pt-[calc(10px+env(safe-area-inset-top,0px))] pb-[calc(12px+env(safe-area-inset-bottom,0px))]"
+        className="fixed inset-y-0 left-0 w-full max-w-md sm:max-w-lg bg-[#FAF6EF] dark:bg-slate-900 border-r border-[#D9CFBD] dark:border-slate-800 shadow-2xl flex flex-col z-50 transform transition-transform duration-300 ease-in-out pt-[calc(10px+env(safe-area-inset-top,0px))] pb-[calc(12px+env(safe-area-inset-bottom,0px))]"
       >
         {/* Drawer Header */}
-        <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-[#E8DFCE] dark:border-slate-800 bg-white/80 dark:bg-slate-900/90 backdrop-blur-md shrink-0">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-[#D9CFBD] dark:border-slate-800 bg-[#FAF6EF]/90 dark:bg-slate-900/90 backdrop-blur-md shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#1B4332] text-amber-400 font-bold flex items-center justify-center text-lg shadow-xs">
               {BIRD_EMOJIS[selectedBird] || '🦅'}
@@ -221,7 +221,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="min-h-[44px] min-w-[44px] rounded-2xl flex items-center justify-center text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer active:scale-95"
+            className="min-h-[44px] min-w-[44px] rounded-2xl flex items-center justify-center text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800 transition-colors cursor-pointer active:scale-95"
             aria-label={language === 'ta' ? 'மெனுவை மூடுக' : 'Close side menu'}
           >
             <X className="w-5 h-5" />
@@ -229,7 +229,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
         </div>
 
         {/* Category Filter Pills Bar */}
-        <div className="flex items-center gap-1.5 px-3 py-2 bg-[#F2ECE1] dark:bg-slate-950/70 border-b border-[#E8DFCE] dark:border-slate-800 overflow-x-auto scrollbar-none shrink-0">
+        <div className="flex items-center gap-1.5 px-3 py-2 bg-[#EFE7DA] dark:bg-slate-950/70 border-b border-[#D9CFBD] dark:border-slate-800 overflow-x-auto scrollbar-none shrink-0">
           {categories.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.id;
@@ -241,7 +241,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                 className={`min-h-[40px] px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
                   isActive
                     ? 'bg-[#1B4332] text-white shadow-xs'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#EFE7D8] dark:hover:bg-slate-700 border border-[#E8DFCE] dark:border-slate-700'
+                    : 'bg-[#FAF6EF] dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#EFE7DA] dark:hover:bg-slate-700 border border-[#D9CFBD] dark:border-slate-700'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -274,7 +274,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                 </button>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs">
+              <div className="bg-[#FAF6EF] dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs">
                 <PakshaDaySelector
                   selectedPaksha={selectedPaksha}
                   selectedDay={selectedDay}
@@ -297,7 +297,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                 </h3>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs">
+              <div className="bg-[#FAF6EF] dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs">
                 <SunriseSunsetBar
                   sunriseTime={sunriseTime}
                   sunsetTime={sunsetTime}
@@ -335,7 +335,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                 </h3>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs">
+              <div className="bg-[#FAF6EF] dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs">
                 <BirdSelector
                   selectedBird={selectedBird}
                   onSelectBird={onSelectBird}
@@ -356,7 +356,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                 </h3>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs space-y-3">
+              <div className="bg-[#FAF6EF] dark:bg-slate-900 p-4 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs space-y-3">
                 <p className="text-xs text-slate-600 dark:text-slate-400">
                   {language === 'ta'
                     ? 'முழு திரை பார்வையில் செயல்பாடு அலை வரைபடம், 24 மணி நேர அட்டவணை மற்றும் பட்சி உறவுகளை காண்க.'
@@ -370,7 +370,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                       onClose();
                       onOpenAnalyticsModal('chart');
                     }}
-                    className="w-full min-h-[44px] p-3 rounded-xl bg-[#FAF6EE] dark:bg-slate-800 border border-[#E8DFCE] dark:border-slate-700 hover:bg-[#EFE7D8] text-left transition-all cursor-pointer flex items-center justify-between"
+                    className="w-full min-h-[44px] p-3 rounded-xl bg-[#EFE7DA] dark:bg-slate-800 border border-[#D9CFBD] dark:border-slate-700 hover:bg-[#E5DCCB] text-left transition-all cursor-pointer flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3">
                       <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
@@ -392,7 +392,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                       onClose();
                       onOpenAnalyticsModal('master');
                     }}
-                    className="w-full min-h-[44px] p-3 rounded-xl bg-[#FAF6EE] dark:bg-slate-800 border border-[#E8DFCE] dark:border-slate-700 hover:bg-[#EFE7D8] text-left transition-all cursor-pointer flex items-center justify-between"
+                    className="w-full min-h-[44px] p-3 rounded-xl bg-[#EFE7DA] dark:bg-slate-800 border border-[#D9CFBD] dark:border-slate-700 hover:bg-[#E5DCCB] text-left transition-all cursor-pointer flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3">
                       <Table className="w-5 h-5 text-amber-600 dark:text-amber-400" />
@@ -414,7 +414,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                       onClose();
                       onOpenAnalyticsModal('relationships');
                     }}
-                    className="w-full min-h-[44px] p-3 rounded-xl bg-[#FAF6EE] dark:bg-slate-800 border border-[#E8DFCE] dark:border-slate-700 hover:bg-[#EFE7D8] text-left transition-all cursor-pointer flex items-center justify-between"
+                    className="w-full min-h-[44px] p-3 rounded-xl bg-[#EFE7DA] dark:bg-slate-800 border border-[#D9CFBD] dark:border-slate-700 hover:bg-[#E5DCCB] text-left transition-all cursor-pointer flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3">
                       <Users className="w-5 h-5 text-sky-600 dark:text-sky-400" />
@@ -444,7 +444,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                 </h3>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs space-y-3">
+              <div className="bg-[#FAF6EF] dark:bg-slate-900 p-4 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs space-y-3">
                 {/* Language Switcher */}
                 <div className="flex items-center justify-between">
                   <div>
@@ -455,13 +455,13 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                       {language === 'ta' ? 'தமிழ் அல்லது ஆங்கிலம்' : 'Tamil or English'}
                     </div>
                   </div>
-                  <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center p-1 rounded-xl bg-[#EFE7DA] dark:bg-slate-800 border border-[#D9CFBD] dark:border-slate-700">
                     <button
                       type="button"
                       onClick={() => setLanguage('en')}
                       className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         language === 'en'
-                          ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                          ? 'bg-[#FAF6EF] dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-400'
                       }`}
                     >
@@ -472,7 +472,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                       onClick={() => setLanguage('ta')}
                       className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         language === 'ta'
-                          ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                          ? 'bg-[#FAF6EF] dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-400'
                       }`}
                     >
@@ -482,7 +482,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                 </div>
 
                 {/* Theme Switcher */}
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between pt-2 border-t border-[#D9CFBD]/60 dark:border-slate-800">
                   <div>
                     <div className="text-xs font-bold text-slate-900 dark:text-white">
                       {language === 'ta' ? 'தோற்றம் / Theme' : 'Appearance'}
@@ -491,17 +491,17 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                       {language === 'ta' ? 'வெளிச்சம் அல்லது இரவு முறை' : 'Bright Ivory or Deep Slate'}
                     </div>
                   </div>
-                  <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center p-1 rounded-xl bg-[#EFE7DA] dark:bg-slate-800 border border-[#D9CFBD] dark:border-slate-700">
                     <button
                       type="button"
                       onClick={() => setTheme('bright')}
                       className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                         theme === 'bright'
-                          ? 'bg-white text-amber-700 shadow-xs'
+                          ? 'bg-[#FAF6EF] text-amber-800 shadow-xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-400'
                       }`}
                     >
-                      <Sun className="w-3.5 h-3.5" />
+                      <Sun className="w-3.5 h-3.5 text-amber-600" />
                       <span>{language === 'ta' ? 'பகல்' : 'Bright'}</span>
                     </button>
                     <button
@@ -509,7 +509,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                       onClick={() => setTheme('dark')}
                       className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                         theme === 'dark'
-                          ? 'bg-slate-700 text-sky-300 shadow-xs'
+                          ? 'bg-slate-700 text-sky-300 shadow-xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-400'
                       }`}
                     >
@@ -520,7 +520,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
                 </div>
 
                 {/* Reset to Today Defaults */}
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                <div className="pt-2 border-t border-[#D9CFBD]/60 dark:border-slate-800">
                   <button
                     type="button"
                     onClick={() => {
@@ -538,7 +538,7 @@ export const SideNavigationDrawer: React.FC<SideNavigationDrawerProps> = ({
         </div>
 
         {/* Drawer Footer info */}
-        <div className="px-4 py-3 border-t border-[#E8DFCE] dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 text-center shrink-0">
+        <div className="px-4 py-3 border-t border-[#D9CFBD] dark:border-slate-800 bg-[#FAF6EF]/80 dark:bg-slate-900/60 text-center shrink-0">
           <p className="text-[11px] text-slate-500 dark:text-slate-400">
             {language === 'ta'
               ? 'பஞ்ச பட்சி சாஸ்திரம் · 10 சாமங்கள் முதன்மை முகப்பு'

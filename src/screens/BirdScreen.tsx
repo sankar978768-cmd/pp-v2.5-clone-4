@@ -27,7 +27,7 @@ export const BirdScreen: React.FC<BirdScreenProps> = ({
       {/* 5 Birds Selector Grid with Ruling/Dying Roles */}
       <section
         aria-label="Choose Bird"
-        className="bg-white dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs space-y-3"
+        className="bg-[#FAF6EF] dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs space-y-3"
       >
         <BirdSelector
           selectedBird={selectedBird}
@@ -40,7 +40,7 @@ export const BirdScreen: React.FC<BirdScreenProps> = ({
       {/* Bird Relationships & Friendship Compatibility Matrix (with compatibility inspector removed) */}
       <section
         aria-label="Bird Relationships Matrix"
-        className="bg-white dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs space-y-3"
+        className="bg-[#FAF6EF] dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs space-y-3"
       >
         <BirdRelationshipsView
           selectedBird={selectedBird}

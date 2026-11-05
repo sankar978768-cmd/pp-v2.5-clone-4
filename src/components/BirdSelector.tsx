@@ -68,8 +68,8 @@ export const BirdSelector: React.FC<BirdSelectorProps> = ({ selectedBird, onSele
               id={`bird-select-btn-${bird.id}`}
               className={`relative flex flex-col p-4 sm:p-5 rounded-2xl text-left transition-all duration-150 min-h-[120px] cursor-pointer touch-manipulation border ${
                 isSelected
-                  ? 'bg-white dark:bg-slate-900 border-[#1B4332] dark:border-amber-400 ring-2 ring-[#1B4332]/40 dark:ring-amber-400/40 shadow-md'
-                  : 'bg-white dark:bg-slate-900/60 hover:bg-[#FAF6EE] dark:hover:bg-slate-850 border-[#E8DFCE] dark:border-slate-800 hover:border-[#D9CEBA] dark:hover:border-slate-700 text-slate-700 dark:text-slate-300 shadow-xs'
+                  ? 'bg-[#FFFDF7] dark:bg-slate-900 border-[#1B4332] dark:border-amber-400 ring-2 ring-[#1B4332]/40 dark:ring-amber-400/40 shadow-md'
+                  : 'bg-[#FAF6EF] dark:bg-slate-900/60 hover:bg-[#EFE7DA] dark:hover:bg-slate-850 border-[#D9CFBD] dark:border-slate-800 hover:border-[#C8BCA4] dark:hover:border-slate-700 text-slate-700 dark:text-slate-300 shadow-xs'
               }`}
             >
               {/* Selected Badge */}
@@ -100,7 +100,7 @@ export const BirdSelector: React.FC<BirdSelectorProps> = ({ selectedBird, onSele
               </div>
 
               {/* Role Indicators */}
-              <div className="mt-auto pt-2.5 border-t border-[#E8DFCE] dark:border-slate-800/80 space-y-1.5 text-[10px]">
+              <div className="mt-auto pt-2.5 border-t border-[#D9CFBD] dark:border-slate-800/80 space-y-1.5 text-[10px]">
                 <div className="flex flex-wrap items-center gap-1.5">
                   {dayRel === 'Ruling Bird' && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#C29738]/15 text-[#8C6B1C] dark:text-amber-300 border border-[#C29738]/30 font-bold">

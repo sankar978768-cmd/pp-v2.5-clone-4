@@ -26,6 +26,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { getTamilDateInfo } from '../utils/tamilCalendar';
+import { ThithiTimeGraph } from './ThithiTimeGraph';
 
 interface RealTimeCalendarModalProps {
   isOpen: boolean;
@@ -40,6 +41,14 @@ interface RealTimeCalendarModalProps {
   selectedDate?: Date | null;
   todayLunarInfo?: LunarDayInfo;
   todayDate?: Date;
+  locationLat?: number | null;
+  locationLng?: number | null;
+  locationName?: string;
+  locationTimezoneOffset?: number;
+  timeDisplayMode?: 'local' | 'ist';
+  sunriseTime?: string;
+  sunsetTime?: string;
+  nextSunriseTime?: string;
 }
 
 const WEEKDAY_KEYS: DayOfWeek[] = [
@@ -61,6 +70,14 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
   selectedDate: initialSelectedDate,
   todayLunarInfo: propTodayLunarInfo,
   todayDate: propTodayDate,
+  locationLat,
+  locationLng,
+  locationName,
+  locationTimezoneOffset,
+  timeDisplayMode = 'local',
+  sunriseTime,
+  sunsetTime,
+  nextSunriseTime,
 }) => {
   const { language, t, getBirdName, getDayName, getDayShortName } =
     useLanguage();
@@ -94,8 +111,13 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
 
   // Active selected date's lunar information
   const selectedLunarInfo = useMemo(() => {
-    return getLunarDayInfo(activeDate);
-  }, [activeDate]);
+    return getLunarDayInfo(
+      activeDate,
+      locationLat !== null && locationLat !== undefined ? locationLat : 13.0827,
+      locationLng !== null && locationLng !== undefined ? locationLng : 80.2707,
+      locationTimezoneOffset ?? 330
+    );
+  }, [activeDate, locationLat, locationLng, locationTimezoneOffset]);
 
   const selectedTamilInfo = useMemo(() => {
     return getTamilDateInfo(activeDate);
@@ -206,9 +228,9 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[95vh] my-auto select-none">
+      <div className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[95vh] my-auto select-none">
         {/* Modal Top Header */}
-        <div className="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/90 shrink-0">
+        <div className="p-3.5 sm:p-4 border-b border-[#D9CFBD] dark:border-slate-800 flex items-center justify-between bg-[#EFE7DA]/70 dark:bg-slate-950/90 shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center">
               <CalendarIcon className="w-4 h-4" />
@@ -232,7 +254,7 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
             onClick={onClose}
             aria-label="Close Calendar"
             id="close-realtime-calendar-btn"
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -241,7 +263,7 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
         {/* Modal Scrollable Body */}
         <div className="p-3 sm:p-4 overflow-y-auto space-y-3.5 text-xs">
           {/* Live Real-Time Banner (Android & Mobile Fast-Sync) */}
-          <div className="bg-gradient-to-r from-amber-500/10 via-slate-50 dark:via-slate-900 to-indigo-500/10 border border-amber-500/30 rounded-2xl p-3 sm:p-3.5 shadow-xs">
+          <div className="bg-gradient-to-r from-amber-500/10 via-[#FAF6EF] dark:via-slate-900 to-indigo-500/10 border border-amber-500/30 rounded-2xl p-3 sm:p-3.5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -294,220 +316,11 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
             </div>
           </div>
 
-          {/* Calendar Month & Navigation Controls */}
-          <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-            {/* Prev / Month / Next */}
-            <div className="flex items-center justify-between sm:justify-start gap-2">
-              <button
-                type="button"
-                onClick={handlePrevMonth}
-                aria-label={t('prevMonth')}
-                id="cal-prev-month-btn"
-                className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shadow-2xs"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-sm sm:text-base">
-                <span>{monthName}</span>
-                <span>{viewYear}</span>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleNextMonth}
-                aria-label={t('nextMonth')}
-                id="cal-next-month-btn"
-                className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shadow-2xs"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Jump to Today & Month/Year Selectors */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <button
-                type="button"
-                onClick={handleJumpToToday}
-                id="cal-jump-today-btn"
-                className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-[11px] font-semibold flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
-              >
-                <span>{t('todayButton')}</span>
-              </button>
-
-              {/* Month Dropdown */}
-              <select
-                value={viewMonth}
-                onChange={(e) => setViewMonth(Number(e.target.value))}
-                aria-label="Select Month"
-                className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[11px] rounded-lg px-2 py-1.5 font-medium focus:outline-none focus:border-amber-500 shadow-2xs"
-              >
-                {Array.from({ length: 12 }).map((_, idx) => (
-                  <option key={idx} value={idx}>
-                    {language === 'ta' ? MONTH_NAMES_TA[idx] : MONTH_NAMES_EN[idx]}
-                  </option>
-                ))}
-              </select>
-
-              {/* Year Dropdown */}
-              <select
-                value={viewYear}
-                onChange={(e) => setViewYear(Number(e.target.value))}
-                aria-label="Select Year"
-                className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[11px] rounded-lg px-2 py-1.5 font-medium focus:outline-none focus:border-amber-500 shadow-2xs"
-              >
-                {yearOptions.map((yr) => (
-                  <option key={yr} value={yr}>
-                    {yr}
-                  </option>
-                ))}
-              </select>
-
-              {/* Direct Native Date input for Android touch ease */}
-              <input
-                type="date"
-                onChange={handleDirectDateInput}
-                value={selectedLunarInfo.dateString}
-                aria-label="Select specific date"
-                className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-300 text-[11px] rounded-lg px-2 py-1 font-medium focus:outline-none focus:border-amber-500 w-28 text-center shadow-2xs"
-                title={t('datePickerLabel')}
-              />
-            </div>
-          </div>
-
-          {/* Monthly Matrix Grid */}
-          <div className="bg-slate-50 dark:bg-slate-950/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-2 sm:p-3 overflow-hidden">
-            {/* Weekday Column Headers */}
-            <div className="grid grid-cols-7 gap-1 sm:gap-1.5 mb-1.5 text-center">
-              {WEEKDAY_KEYS.map((wkDay) => {
-                const isWeekend = wkDay === 'sunday' || wkDay === 'saturday';
-                return (
-                  <div
-                    key={wkDay}
-                    className={`py-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold uppercase tracking-wider ${
-                      isWeekend ? 'text-amber-700 dark:text-amber-400/90' : 'text-slate-500 dark:text-slate-400'
-                    }`}
-                  >
-                    {getDayShortName(wkDay)}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Calendar Day Cells */}
-            <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
-              {calendarMatrix.map((dayInfo, idx) => {
-                if (!dayInfo) {
-                  return (
-                    <div
-                      key={`empty-${idx}`}
-                      className="min-h-[46px] sm:min-h-[58px] rounded-xl bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-900/40 opacity-20 pointer-events-none"
-                    />
-                  );
-                }
-
-                const isSelected =
-                  activeDate.getFullYear() === dayInfo.year &&
-                  activeDate.getMonth() === dayInfo.month &&
-                  activeDate.getDate() === dayInfo.dayNumber;
-
-                const isTodayCell = dayInfo.isToday;
-                const isValarpirai = dayInfo.paksha === 'valarpirai';
-                const cellTamilInfo = getTamilDateInfo(dayInfo.date);
-                const isThaniya = cellTamilInfo.isThaniyaNaal;
-
-                return (
-                  <button
-                    key={dayInfo.dateString}
-                    type="button"
-                    onClick={() => handleSelectDayCell(dayInfo)}
-                    id={`cal-date-${dayInfo.dateString}`}
-                    className={`min-h-[46px] sm:min-h-[58px] p-1 sm:p-1.5 rounded-xl border flex flex-col justify-between items-center text-center transition-all cursor-pointer relative active:scale-95 ${
-                      isThaniya
-                        ? isSelected
-                          ? 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-500 shadow-md font-bold z-10'
-                          : 'bg-rose-50 dark:bg-rose-950/60 border-rose-400 dark:border-rose-500/70 text-rose-950 dark:text-rose-100 ring-1 ring-rose-500/50 hover:bg-rose-100'
-                        : isSelected
-                        ? 'bg-amber-500/25 border-amber-500 dark:border-amber-400 text-slate-950 dark:text-white shadow-md ring-2 ring-amber-500/60 dark:ring-amber-400/60 font-bold z-10'
-                        : isTodayCell
-                        ? 'bg-emerald-50 dark:bg-slate-800/90 border-emerald-500 dark:border-emerald-400/70 text-slate-900 dark:text-slate-100 ring-1 ring-emerald-500/40'
-                        : isValarpirai
-                        ? 'bg-white dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 border-amber-300 dark:border-amber-500/20 text-slate-800 dark:text-slate-200'
-                        : 'bg-white dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 border-indigo-300 dark:border-indigo-500/20 text-slate-800 dark:text-slate-200'
-                    }`}
-                  >
-                    {/* Top Row: Day Number & Today dot / Alert badge */}
-                    <div className="w-full flex items-center justify-between px-0.5">
-                      <span
-                        className={`text-xs sm:text-sm font-extrabold ${
-                          isThaniya && !isSelected
-                            ? 'text-rose-700 dark:text-rose-300'
-                            : isSelected
-                            ? 'text-amber-800 dark:text-amber-300'
-                            : isTodayCell
-                            ? 'text-emerald-700 dark:text-emerald-300'
-                            : 'text-slate-800 dark:text-slate-200'
-                        }`}
-                      >
-                        {dayInfo.dayNumber}
-                      </span>
-
-                      {isThaniya ? (
-                        <span className="text-[9px] text-rose-600 dark:text-rose-400 font-black" title="தனிய நாள் (Red Alert)">
-                          🚨
-                        </span>
-                      ) : isTodayCell ? (
-                        <span
-                          className="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-500/30"
-                          title="Today"
-                        />
-                      ) : null}
-                    </div>
-
-                    {/* Middle: Moon Phase Graphic & Tamil Date */}
-                    <div className="my-0.2 flex items-center justify-center gap-0.5 leading-none">
-                      <span className="text-xs">{dayInfo.moonEmoji}</span>
-                      <span className={`text-[9px] font-mono font-bold ${isThaniya ? 'text-rose-700 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}`}>
-                        {cellTamilInfo.tamilDate}
-                      </span>
-                    </div>
-
-                    {/* Bottom: Pirai Tag */}
-                    <div className="w-full truncate">
-                      <span
-                        className={`text-[9px] sm:text-[10px] px-1 py-0.2 rounded font-semibold block truncate ${
-                          isThaniya
-                            ? isSelected
-                              ? 'bg-rose-700 text-white font-black'
-                              : 'bg-rose-500/20 text-rose-800 dark:text-rose-200 font-bold'
-                            : isValarpirai
-                            ? isSelected
-                              ? 'bg-amber-500 text-slate-950 font-bold'
-                              : 'bg-amber-500/20 text-amber-800 dark:text-amber-300'
-                            : isSelected
-                            ? 'bg-indigo-500 text-white font-bold'
-                            : 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300'
-                        }`}
-                      >
-                        {isThaniya
-                          ? (language === 'ta' ? 'தனிய' : 'Alert')
-                          : language === 'ta'
-                          ? isValarpirai
-                            ? 'வளர்'
-                            : 'தேய்'
-                          : isValarpirai
-                          ? 'Waxing'
-                          : 'Waning'}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Selected Date Detail & Pancha Pakshi Preview Card */}
-          <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 space-y-3">
+          {/* Selected Date Detail & Pancha Pakshi Preview Card (TOP POSITION) */}
+          <div
+            id="modal-selected-date-details-top"
+            className="bg-[#FAF6EF] dark:bg-slate-950 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl p-3 sm:p-4 space-y-3"
+          >
             {/* Red Alert warning if selected date is a Thaniya Naal */}
             {selectedTamilInfo.isThaniyaNaal && (
               <div className="p-2.5 rounded-xl bg-rose-500/15 border-2 border-rose-500/70 text-rose-950 dark:text-rose-100 flex items-center gap-2 text-xs font-bold animate-pulse">
@@ -603,23 +416,26 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
             </div>
 
             {/* Astrological Breakdown: Tithi, Moon Phase, Illumination & Shastra Rulers */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-200 dark:border-slate-800 text-[11px]">
-              {/* Tithi */}
-              <div className="bg-white dark:bg-slate-900/80 p-2 rounded-xl border border-slate-200 dark:border-slate-800/80">
-                <span className="text-slate-500 dark:text-slate-400 block text-[10px]">{t('tithiLabel')}</span>
-                <span className="font-bold text-slate-900 dark:text-white truncate block">
-                  {language === 'ta'
-                    ? selectedLunarInfo.tithiNameTa
-                    : selectedLunarInfo.tithiNameEn}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#D9CFBD] dark:border-slate-800 text-[11px]">
+              {/* Tithi in Tanglish */}
+              <div className="bg-[#EFE7DA]/60 dark:bg-slate-900/80 p-2 rounded-xl border border-[#D9CFBD] dark:border-slate-800/80">
+                <span className="text-slate-500 dark:text-slate-400 block text-[10px]">
+                  {language === 'ta' ? 'திதி (Tanglish)' : 'Tithi (Tanglish)'}
+                </span>
+                <span className="font-bold text-amber-700 dark:text-amber-400 truncate block">
+                  {selectedLunarInfo.tithiNameTanglish || selectedLunarInfo.tithiNameEn}{' '}
+                  <span className="text-[10px] text-slate-500 font-normal">
+                    ({selectedLunarInfo.tithiNameTa})
+                  </span>
                 </span>
               </div>
 
               {/* Moon Phase & Illumination */}
-              <div className="bg-white dark:bg-slate-900/80 p-2 rounded-xl border border-slate-200 dark:border-slate-800/80">
+              <div className="bg-[#EFE7DA]/60 dark:bg-slate-900/80 p-2 rounded-xl border border-[#D9CFBD] dark:border-slate-800/80">
                 <span className="text-slate-500 dark:text-slate-400 block text-[10px]">{t('illuminationLabel')}</span>
                 <span className="font-bold text-amber-700 dark:text-amber-300 flex items-center gap-1">
                   <span>{selectedLunarInfo.illuminationPercent}%</span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal truncate">
                     {language === 'ta'
                       ? selectedLunarInfo.moonPhaseNameTa
                       : selectedLunarInfo.moonPhaseNameEn}
@@ -627,8 +443,8 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
                 </span>
               </div>
 
-              {/* Day Ruler Bird for this calculated date */}
-              <div className="bg-white dark:bg-slate-900/80 p-2 rounded-xl border border-slate-200 dark:border-slate-800/80">
+              {/* Day Ruler Bird */}
+              <div className="bg-[#EFE7DA]/60 dark:bg-slate-900/80 p-2 rounded-xl border border-[#D9CFBD] dark:border-slate-800/80">
                 <span className="text-slate-500 dark:text-slate-400 block text-[10px] flex items-center gap-1">
                   <Sun className="w-3 h-3 text-amber-500" />
                   <span>{t('dayRulerShort')}</span>
@@ -640,8 +456,8 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
                 </span>
               </div>
 
-              {/* Dying Bird for this calculated date */}
-              <div className="bg-white dark:bg-slate-900/80 p-2 rounded-xl border border-slate-200 dark:border-slate-800/80">
+              {/* Dying Bird */}
+              <div className="bg-[#EFE7DA]/60 dark:bg-slate-900/80 p-2 rounded-xl border border-[#D9CFBD] dark:border-slate-800/80">
                 <span className="text-slate-500 dark:text-slate-400 block text-[10px] flex items-center gap-1">
                   <Moon className="w-3 h-3 text-purple-500" />
                   <span>{t('nightRulerShort')}</span>
@@ -652,6 +468,241 @@ export const RealTimeCalendarModal: React.FC<RealTimeCalendarModalProps> = ({
                     : '—'}
                 </span>
               </div>
+            </div>
+
+            {/* Thithi to Thithi Time Graph Component */}
+            <ThithiTimeGraph
+              selectedDate={activeDate}
+              onSelectDate={(newDate) => {
+                setActiveDate(newDate);
+                const info = getLunarDayInfo(
+                  newDate,
+                  locationLat !== null && locationLat !== undefined ? locationLat : 13.0827,
+                  locationLng !== null && locationLng !== undefined ? locationLng : 80.2707,
+                  locationTimezoneOffset ?? 330
+                );
+                onSelectPakshaAndDay(info.paksha, info.dayOfWeek, newDate);
+              }}
+              locationLat={locationLat}
+              locationLng={locationLng}
+              locationName={locationName}
+              locationTimezoneOffset={locationTimezoneOffset}
+              timeDisplayMode={timeDisplayMode}
+              sunriseTime={sunriseTime}
+              sunsetTime={sunsetTime}
+              nextSunriseTime={nextSunriseTime}
+            />
+          </div>
+
+          {/* Calendar Month & Navigation Controls */}
+          <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            {/* Prev / Month / Next */}
+            <div className="flex items-center justify-between sm:justify-start gap-2">
+              <button
+                type="button"
+                onClick={handlePrevMonth}
+                aria-label={t('prevMonth')}
+                id="cal-prev-month-btn"
+                className="p-1.5 rounded-lg bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 hover:bg-[#EFE7DA] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shadow-2xs"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                <span>{monthName}</span>
+                <span>{viewYear}</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleNextMonth}
+                aria-label={t('nextMonth')}
+                id="cal-next-month-btn"
+                className="p-1.5 rounded-lg bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 hover:bg-[#EFE7DA] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shadow-2xs"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Jump to Today & Month/Year Selectors */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                onClick={handleJumpToToday}
+                id="cal-jump-today-btn"
+                className="px-2.5 py-1.5 rounded-lg bg-[#FAF6EF] dark:bg-slate-800 hover:bg-[#EFE7DA] dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-[#D9CFBD] dark:border-slate-700 text-[11px] font-semibold flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+              >
+                <span>{t('todayButton')}</span>
+              </button>
+
+              {/* Month Dropdown */}
+              <select
+                value={viewMonth}
+                onChange={(e) => setViewMonth(Number(e.target.value))}
+                aria-label="Select Month"
+                className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[11px] rounded-lg px-2 py-1.5 font-medium focus:outline-none focus:border-amber-500 shadow-2xs"
+              >
+                {Array.from({ length: 12 }).map((_, idx) => (
+                  <option key={idx} value={idx}>
+                    {language === 'ta' ? MONTH_NAMES_TA[idx] : MONTH_NAMES_EN[idx]}
+                  </option>
+                ))}
+              </select>
+
+              {/* Year Dropdown */}
+              <select
+                value={viewYear}
+                onChange={(e) => setViewYear(Number(e.target.value))}
+                aria-label="Select Year"
+                className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[11px] rounded-lg px-2 py-1.5 font-medium focus:outline-none focus:border-amber-500 shadow-2xs"
+              >
+                {yearOptions.map((yr) => (
+                  <option key={yr} value={yr}>
+                    {yr}
+                  </option>
+                ))}
+              </select>
+
+              {/* Direct Native Date input for Android touch ease */}
+              <input
+                type="date"
+                onChange={handleDirectDateInput}
+                value={selectedLunarInfo.dateString}
+                aria-label="Select specific date"
+                className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 text-slate-800 dark:text-slate-300 text-[11px] rounded-lg px-2 py-1 font-medium focus:outline-none focus:border-amber-500 w-28 text-center shadow-2xs"
+                title={t('datePickerLabel')}
+              />
+            </div>
+          </div>
+
+          {/* Monthly Matrix Grid */}
+          <div className="bg-[#FAF6EF] dark:bg-slate-950/90 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl p-2 sm:p-3 overflow-hidden">
+            {/* Weekday Column Headers */}
+            <div className="grid grid-cols-7 gap-1 sm:gap-1.5 mb-1.5 text-center">
+              {WEEKDAY_KEYS.map((wkDay) => {
+                const isWeekend = wkDay === 'sunday' || wkDay === 'saturday';
+                return (
+                  <div
+                    key={wkDay}
+                    className={`py-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold uppercase tracking-wider ${
+                      isWeekend ? 'text-amber-700 dark:text-amber-400/90' : 'text-slate-500 dark:text-slate-400'
+                    }`}
+                  >
+                    {getDayShortName(wkDay)}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Calendar Day Cells */}
+            <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
+              {calendarMatrix.map((dayInfo, idx) => {
+                if (!dayInfo) {
+                  return (
+                    <div
+                      key={`empty-${idx}`}
+                      className="min-h-[46px] sm:min-h-[58px] rounded-xl bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-900/40 opacity-20 pointer-events-none"
+                    />
+                  );
+                }
+
+                const isSelected =
+                  activeDate.getFullYear() === dayInfo.year &&
+                  activeDate.getMonth() === dayInfo.month &&
+                  activeDate.getDate() === dayInfo.dayNumber;
+
+                const isTodayCell = dayInfo.isToday;
+                const isValarpirai = dayInfo.paksha === 'valarpirai';
+                const cellTamilInfo = getTamilDateInfo(dayInfo.date);
+                const isThaniya = cellTamilInfo.isThaniyaNaal;
+
+                return (
+                  <button
+                    key={dayInfo.dateString}
+                    type="button"
+                    onClick={() => handleSelectDayCell(dayInfo)}
+                    id={`cal-date-${dayInfo.dateString}`}
+                    className={`min-h-[46px] sm:min-h-[58px] p-1 sm:p-1.5 rounded-xl border flex flex-col justify-between items-center text-center transition-all cursor-pointer relative active:scale-95 ${
+                      isThaniya
+                        ? isSelected
+                          ? 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-500 shadow-md font-bold z-10'
+                          : 'bg-rose-50 dark:bg-rose-950/60 border-rose-400 dark:border-rose-500/70 text-rose-950 dark:text-rose-100 ring-1 ring-rose-500/50 hover:bg-rose-100'
+                        : isSelected
+                        ? 'bg-amber-500/25 border-amber-500 dark:border-amber-400 text-slate-950 dark:text-white shadow-md ring-2 ring-amber-500/60 dark:ring-amber-400/60 font-bold z-10'
+                        : isTodayCell
+                        ? 'bg-emerald-50 dark:bg-slate-800/90 border-emerald-500 dark:border-emerald-400/70 text-slate-900 dark:text-slate-100 ring-1 ring-emerald-500/40'
+                        : isValarpirai
+                        ? 'bg-[#F8F4EB] dark:bg-slate-900/90 hover:bg-[#EDE5D6] dark:hover:bg-slate-800 border-[#D9CFBD] dark:border-amber-500/20 text-slate-800 dark:text-slate-200'
+                        : 'bg-[#F8F4EB] dark:bg-slate-900/90 hover:bg-[#EDE5D6] dark:hover:bg-slate-800 border-[#D9CFBD] dark:border-indigo-500/20 text-slate-800 dark:text-slate-200'
+                    }`}
+                  >
+                    {/* Top Row: Day Number & Today dot / Alert badge */}
+                    <div className="w-full flex items-center justify-between px-0.5">
+                      <span
+                        className={`text-xs sm:text-sm font-extrabold ${
+                          isThaniya && !isSelected
+                            ? 'text-rose-700 dark:text-rose-300'
+                            : isSelected
+                            ? 'text-amber-800 dark:text-amber-300'
+                            : isTodayCell
+                            ? 'text-emerald-700 dark:text-emerald-300'
+                            : 'text-slate-800 dark:text-slate-200'
+                        }`}
+                      >
+                        {dayInfo.dayNumber}
+                      </span>
+
+                      {isThaniya ? (
+                        <span className="text-[9px] text-rose-600 dark:text-rose-400 font-black" title="தனிய நாள் (Red Alert)">
+                          🚨
+                        </span>
+                      ) : isTodayCell ? (
+                        <span
+                          className="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-500/30"
+                          title="Today"
+                        />
+                      ) : null}
+                    </div>
+
+                    {/* Middle: Moon Phase Graphic & Tamil Date */}
+                    <div className="my-0.2 flex items-center justify-center gap-0.5 leading-none">
+                      <span className="text-xs">{dayInfo.moonEmoji}</span>
+                      <span className={`text-[9px] font-mono font-bold ${isThaniya ? 'text-rose-700 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}`}>
+                        {cellTamilInfo.tamilDate}
+                      </span>
+                    </div>
+
+                    {/* Bottom: Pirai Tag */}
+                    <div className="w-full truncate">
+                      <span
+                        className={`text-[9px] sm:text-[10px] px-1 py-0.2 rounded font-semibold block truncate ${
+                          isThaniya
+                            ? isSelected
+                              ? 'bg-rose-700 text-white font-black'
+                              : 'bg-rose-500/20 text-rose-800 dark:text-rose-200 font-bold'
+                            : isValarpirai
+                            ? isSelected
+                              ? 'bg-amber-500 text-slate-950 font-bold'
+                              : 'bg-amber-500/20 text-amber-800 dark:text-amber-300'
+                            : isSelected
+                            ? 'bg-indigo-500 text-white font-bold'
+                            : 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300'
+                        }`}
+                      >
+                        {isThaniya
+                          ? (language === 'ta' ? 'தனிய' : 'Alert')
+                          : language === 'ta'
+                          ? isValarpirai
+                            ? 'வளர்'
+                            : 'தேய்'
+                          : isValarpirai
+                          ? 'Waxing'
+                          : 'Waning'}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

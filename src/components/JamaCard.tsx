@@ -72,14 +72,14 @@ export const JamaCard: React.FC<JamaCardProps> = ({
       id={`jama-card-${jama.jamaNumber}`}
       className={`rounded-lg sm:rounded-xl border transition-all duration-150 overflow-hidden ${
         isCurrentJama
-          ? 'bg-white dark:bg-slate-900 border-[#D49B28] dark:border-amber-400 ring-2 ring-[#D49B28]/30 dark:ring-amber-400/40 shadow-md'
-          : 'bg-white dark:bg-slate-900/60 border-[#E8DFCE] dark:border-slate-800 hover:border-[#D9CEBA] dark:hover:border-slate-700 shadow-xs'
+          ? 'bg-[#FFFDF7] dark:bg-slate-900 border-[#D49B28] dark:border-amber-400 ring-2 ring-[#D49B28]/30 dark:ring-amber-400/40 shadow-md'
+          : 'bg-[#FAF6EF] dark:bg-slate-900/60 border-[#D9CFBD] dark:border-slate-800 hover:border-[#C8BCA4] dark:hover:border-slate-700 shadow-xs'
       }`}
     >
       {/* Jama Header Bar: Strict horizontal layout with tighter internal padding */}
       <div
         onClick={handleToggle}
-        className="px-2 py-1 sm:px-2.5 sm:py-1.5 flex flex-row items-center justify-between gap-1 sm:gap-2 cursor-pointer select-none bg-[#FFFDF9] dark:bg-slate-900/80 hover:bg-[#FAF6EE] dark:hover:bg-slate-850/90 transition-colors"
+        className="px-2 py-1 sm:px-2.5 sm:py-1.5 flex flex-row items-center justify-between gap-1 sm:gap-2 cursor-pointer select-none bg-[#F5EFE4] dark:bg-slate-900/80 hover:bg-[#EFE7DA] dark:hover:bg-slate-850/90 transition-colors"
       >
         {/* Left Side: Icon, Title, Timings, Live Indicator */}
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
@@ -97,7 +97,7 @@ export const JamaCard: React.FC<JamaCardProps> = ({
             <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white leading-tight shrink-0">
               {jama.title}
             </h4>
-            <span className="text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded bg-[#FAF6EE] dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono border border-[#E8DFCE] dark:border-slate-700 shrink-0">
+            <span className="text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded bg-[#EFE7DA] dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono border border-[#D9CFBD] dark:border-slate-700 shrink-0">
               {jama.startTime}–{jama.endTime}
             </span>
             {isCurrentJama && (
@@ -136,7 +136,7 @@ export const JamaCard: React.FC<JamaCardProps> = ({
               handleToggle();
             }}
             aria-label={isExpanded ? 'Collapse Jama' : 'Expand Jama'}
-            className="p-1 rounded-md bg-[#FAF6EE] dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-pointer border border-[#E8DFCE] dark:border-slate-700 shrink-0"
+            className="p-1 rounded-md bg-[#EFE7DA] dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-pointer border border-[#D9CFBD] dark:border-slate-700 shrink-0"
           >
             {isExpanded ? <ChevronUp className="w-3.5 h-3.5" strokeWidth={1.5} /> : <ChevronDown className="w-3.5 h-3.5" strokeWidth={1.5} />}
           </button>
@@ -145,7 +145,7 @@ export const JamaCard: React.FC<JamaCardProps> = ({
 
       {/* Expanded Sub-Periods Table with tighter padding */}
       {isExpanded && (
-        <div className="border-t border-[#E8DFCE] dark:border-slate-800/80 p-2 sm:p-2.5 bg-[#FAF6EE]/50 dark:bg-slate-950/50">
+        <div className="border-t border-[#D9CFBD] dark:border-slate-800/80 p-2 sm:p-2.5 bg-[#EFE7DA]/50 dark:bg-slate-950/50">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2">
             <div className="text-[11px] sm:text-xs text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-1.5">
               <span>{birdDisplayName} {t('columnSubPeriods')}</span>
@@ -163,9 +163,9 @@ export const JamaCard: React.FC<JamaCardProps> = ({
 
           {!showAllColumns ? (
             /* Selected Bird's 5 Sub-Periods Table */
-            <div className="overflow-x-auto rounded-xl border border-[#E8DFCE] dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+            <div className="overflow-x-auto rounded-xl border border-[#D9CFBD] dark:border-slate-800 bg-[#FAF6EF] dark:bg-slate-900 shadow-xs">
               <table className="w-full text-left text-[11px]">
-                <thead className="bg-[#FAF6EE] dark:bg-slate-900/90 text-slate-700 dark:text-slate-400 uppercase tracking-wider text-[9px] font-bold border-b border-[#E8DFCE] dark:border-slate-800">
+                <thead className="bg-[#EFE7DA] dark:bg-slate-900/90 text-slate-700 dark:text-slate-400 uppercase tracking-wider text-[9px] font-bold border-b border-[#D9CFBD] dark:border-slate-800">
                   <tr>
                     <th scope="col" className="py-1.5 px-2.5">{t('thNumber')}</th>
                     <th scope="col" className="py-1.5 px-2.5">{t('thSubBird')}</th>
@@ -176,7 +176,7 @@ export const JamaCard: React.FC<JamaCardProps> = ({
                     <th scope="col" className="py-1.5 px-2.5">{t('thEndTime')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E8DFCE]/60 dark:divide-slate-800/60 font-medium">
+                <tbody className="divide-y divide-[#D9CFBD]/60 dark:divide-slate-800/60 font-medium">
                   {birdColumn.subPeriods.map((sp, idx) => {
                     const subBirdInfo = BIRDS[sp.birdId];
                     const act = ACTIVITY_DETAILS[sp.activity];
@@ -193,7 +193,7 @@ export const JamaCard: React.FC<JamaCardProps> = ({
                         className={`transition-colors ${
                           active
                             ? 'bg-[#C29738]/15 font-semibold text-slate-950 dark:text-white'
-                            : 'hover:bg-[#FAF6EE]/70 dark:hover:bg-slate-900/50 text-slate-700 dark:text-slate-300'
+                            : 'hover:bg-[#EFE7DA]/70 dark:hover:bg-slate-900/50 text-slate-700 dark:text-slate-300'
                         }`}
                       >
                         <td className="py-1.5 px-2.5 font-mono text-slate-400 dark:text-slate-500 text-[10px]">
@@ -267,9 +267,9 @@ export const JamaCard: React.FC<JamaCardProps> = ({
             </div>
           ) : (
             /* Multi-Column Comparison Table for all 5 birds in this Jama */
-            <div className="overflow-x-auto rounded-xl border border-[#E8DFCE] dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+            <div className="overflow-x-auto rounded-xl border border-[#D9CFBD] dark:border-slate-800 bg-[#FAF6EF] dark:bg-slate-900 shadow-xs">
               <div className="min-w-[640px]">
-                <div className="grid grid-cols-5 bg-[#FAF6EE] dark:bg-slate-900 text-[11px] font-bold border-b border-[#E8DFCE] dark:border-slate-800">
+                <div className="grid grid-cols-5 bg-[#EFE7DA] dark:bg-slate-900 text-[11px] font-bold border-b border-[#D9CFBD] dark:border-slate-800">
                   {(Object.keys(jama.columns) as BirdId[]).map((bKey) => {
                     const col = jama.columns[bKey];
                     const bInfo = BIRDS[bKey];
@@ -279,7 +279,7 @@ export const JamaCard: React.FC<JamaCardProps> = ({
                     return (
                       <div
                         key={bKey}
-                        className={`p-2 border-r border-[#E8DFCE] dark:border-slate-800 last:border-r-0 ${
+                        className={`p-2 border-r border-[#D9CFBD] dark:border-slate-800 last:border-r-0 ${
                           isFocus ? 'bg-[#1B4332]/10 border-b-2 border-b-[#1B4332] dark:border-b-amber-400' : ''
                         }`}
                       >
@@ -295,7 +295,7 @@ export const JamaCard: React.FC<JamaCardProps> = ({
 
                 {/* 5 Rows of Sub-periods */}
                 {[0, 1, 2, 3, 4].map((subIdx) => (
-                  <div key={subIdx} className="grid grid-cols-5 border-b border-[#E8DFCE]/60 dark:border-slate-800/60 divide-x divide-[#E8DFCE]/60 dark:divide-slate-800/60 text-[11px]">
+                  <div key={subIdx} className="grid grid-cols-5 border-b border-[#D9CFBD]/60 dark:border-slate-800/60 divide-x divide-[#D9CFBD]/60 dark:divide-slate-800/60 text-[11px]">
                     {(Object.keys(jama.columns) as BirdId[]).map((bKey) => {
                       const sp = jama.columns[bKey].subPeriods[subIdx];
                       const isFocus = bKey === selectedBird;

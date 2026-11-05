@@ -96,7 +96,7 @@ export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
   return (
     <nav
       id="fixed-bottom-nav"
-      className={`fixed bottom-0 left-0 right-0 z-40 w-full bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-t border-[#E8DFCE] dark:border-slate-800 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_-2px_10px_rgba(0,0,0,0.4)] transition-colors duration-150 ${
+      className={`fixed bottom-0 left-0 right-0 z-40 w-full bg-[#FAF6EF]/95 dark:bg-slate-950/95 backdrop-blur-md border-t border-[#D9CFBD] dark:border-slate-800 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_-2px_10px_rgba(0,0,0,0.4)] transition-colors duration-150 ${
         variant === 'compact'
           ? 'pb-[max(0.15rem,env(safe-area-inset-bottom))]'
           : 'pb-[max(0.35rem,env(safe-area-inset-bottom))]'
@@ -120,7 +120,7 @@ export const FixedBottomNav: React.FC<FixedBottomNavProps> = ({
                 } ${
                   isActive
                     ? 'text-[#1B4332] dark:text-emerald-400 font-extrabold bg-[#1B4332]/8 dark:bg-emerald-500/15'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-slate-900/60 font-medium'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-[#EFE7DA]/70 dark:hover:bg-slate-900/60 font-medium'
                 }`}
                 title={item.tooltip}
                 aria-selected={isActive}

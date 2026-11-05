@@ -5,6 +5,7 @@ import { PakshaDaySelector } from '../components/PakshaDaySelector';
 import { TamilMonthCalendarView } from '../components/TamilMonthCalendarView';
 import { useLanguage } from '../context/LanguageContext';
 import { getTamilDateInfo } from '../utils/tamilCalendar';
+import { getLunarDayInfo } from '../utils/lunarCalendar';
 import {
   Calendar,
   CalendarDays,
@@ -22,6 +23,15 @@ export interface CalendarScreenProps {
   onCustomDayUploaded?: (dayId: string, jamas: Jama[]) => void;
   onOpenCalendar: () => void;
   selectedDate?: Date | null;
+  // Location props
+  locationLat?: number | null;
+  locationLng?: number | null;
+  locationName?: string;
+  locationTimezoneOffset?: number;
+  timeDisplayMode?: 'local' | 'ist';
+  sunriseTime?: string;
+  sunsetTime?: string;
+  nextSunriseTime?: string;
 }
 
 export const CalendarScreen: React.FC<CalendarScreenProps> = ({
@@ -31,6 +41,14 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({
   onCustomDayUploaded,
   onOpenCalendar,
   selectedDate,
+  locationLat,
+  locationLng,
+  locationName,
+  locationTimezoneOffset,
+  timeDisplayMode = 'local',
+  sunriseTime,
+  sunsetTime,
+  nextSunriseTime,
 }) => {
   const { language, getPakshaName, getDayName } = useLanguage();
 
@@ -39,11 +57,17 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({
 
   const activeDate = selectedDate || new Date();
   const activeTamilInfo = getTamilDateInfo(activeDate);
+  const activeLunarInfo = getLunarDayInfo(
+    activeDate,
+    locationLat !== null && locationLat !== undefined ? locationLat : 13.0827,
+    locationLng !== null && locationLng !== undefined ? locationLng : 80.2707,
+    locationTimezoneOffset ?? 330
+  );
 
   return (
     <div className="space-y-4 animate-fadeIn">
       {/* Screen Title & Active Date Banner */}
-      <section className="bg-white dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs">
+      <section className="bg-[#FAF6EF] dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1.5">
@@ -63,6 +87,10 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({
               <span>{activeTamilInfo.tamilMonthNameTa} {activeTamilInfo.tamilDate}</span>
               <span className="text-slate-400 dark:text-slate-600">•</span>
               <span>{getPakshaName(selectedPaksha)} · {getDayName(selectedDay)}</span>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
+              <span className="text-amber-700 dark:text-amber-400">
+                {activeLunarInfo.tithiNameTanglish} <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">({activeLunarInfo.tithiNameTa})</span>
+              </span>
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
@@ -85,7 +113,7 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({
         </div>
 
         {/* Tab Switcher: English Calendar vs Tamil Month Calendar vs Paksha & Day Selector */}
-        <div className="mt-4 pt-3 border-t border-[#E8DFCE] dark:border-slate-800 flex items-center gap-2 overflow-x-auto pb-1">
+        <div className="mt-4 pt-3 border-t border-[#D9CFBD] dark:border-slate-800 flex items-center gap-2 overflow-x-auto pb-1">
           <button
             type="button"
             onClick={() => setCalendarSubTab('english')}
@@ -93,7 +121,7 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({
             className={`min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer shrink-0 ${
               calendarSubTab === 'english'
                 ? 'bg-[#1B4332] text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                : 'bg-[#EFE7DA] dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#E5DCCB] dark:hover:bg-slate-700'
             }`}
           >
             <CalendarDays className={`w-3.5 h-3.5 ${calendarSubTab === 'english' ? 'text-amber-400' : 'text-amber-600'}`} />
@@ -107,7 +135,7 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({
             className={`min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer shrink-0 ${
               calendarSubTab === 'tamil'
                 ? 'bg-[#1B4332] text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                : 'bg-[#EFE7DA] dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#E5DCCB] dark:hover:bg-slate-700'
             }`}
           >
             <Flame className={`w-3.5 h-3.5 ${calendarSubTab === 'tamil' ? 'text-amber-400' : 'text-rose-500'}`} />
@@ -121,7 +149,7 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({
             className={`min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer shrink-0 ${
               calendarSubTab === 'paksha'
                 ? 'bg-[#1B4332] text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                : 'bg-[#EFE7DA] dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#E5DCCB] dark:hover:bg-slate-700'
             }`}
           >
             <Moon className="w-3.5 h-3.5 text-amber-500" />
@@ -131,12 +159,20 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({
       </section>
 
       {/* Main Calendar View Section */}
-      <section aria-label="Calendar Management" className="bg-white dark:bg-slate-900/90 p-3 sm:p-5 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs">
+      <section aria-label="Calendar Management" className="bg-[#FAF6EF] dark:bg-slate-900/90 p-3 sm:p-5 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs">
         {calendarSubTab === 'english' ? (
           <EnglishMonthCalendarView
             onSelectPakshaAndDay={onSelectPakshaAndDay}
             selectedDate={selectedDate}
             onOpenModal={onOpenCalendar}
+            locationLat={locationLat}
+            locationLng={locationLng}
+            locationName={locationName}
+            locationTimezoneOffset={locationTimezoneOffset}
+            timeDisplayMode={timeDisplayMode}
+            sunriseTime={sunriseTime}
+            sunsetTime={sunsetTime}
+            nextSunriseTime={nextSunriseTime}
           />
         ) : calendarSubTab === 'tamil' ? (
           <TamilMonthCalendarView

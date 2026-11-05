@@ -135,7 +135,7 @@ export const JamasScreen: React.FC<JamasScreenProps> = ({
       {/* 2. Jamas Screen Top Status & Astrological Rulers Strip */}
       <section
         aria-label="10 Jama Calculation Controls and Astrological Rulers"
-        className="bg-white dark:bg-slate-900/90 p-2.5 sm:p-3.5 rounded-xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs space-y-2 mb-1"
+        className="bg-[#FAF6EF] dark:bg-slate-900/90 p-2.5 sm:p-3.5 rounded-xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs space-y-2 mb-1"
       >
         {/* Top Row: Active Bird, Paksha, Day, Location + Expand/Collapse Buttons */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -203,7 +203,7 @@ export const JamasScreen: React.FC<JamasScreenProps> = ({
               className={`min-h-[42px] text-xs px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
                 expandedJamas.length === 1 && expandedJamas[0] === runningJamaNumber
                   ? 'bg-amber-500/20 border-amber-500/50 text-amber-900 dark:text-amber-300'
-                  : 'bg-[#FAF6EE] dark:bg-slate-800 border-[#E8DFCE] dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  : 'bg-[#EFE7DA] dark:bg-slate-800 border-[#D9CFBD] dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
               title={t('runningJamaExpandedOnly')}
             >
@@ -215,7 +215,7 @@ export const JamasScreen: React.FC<JamasScreenProps> = ({
               type="button"
               onClick={onToggleExpandAll}
               id="toggle-expand-all-jamas-btn"
-              className="min-h-[42px] text-xs px-3 py-1.5 rounded-xl border border-[#E8DFCE] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="min-h-[42px] text-xs px-3 py-1.5 rounded-xl border border-[#D9CFBD] dark:border-slate-700 bg-[#FAF6EF] dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800 font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               {expandedJamas.length === 10 ? (
                 <>
@@ -235,7 +235,7 @@ export const JamasScreen: React.FC<JamasScreenProps> = ({
         {/* Dedicated Astrological Rulers Top Bar (Day Ruler, Night Ruler, Dying Bird) */}
         <div
           id="jamas-screen-astrological-rulers"
-          className="pt-3 border-t border-[#E8DFCE]/80 dark:border-slate-800/80"
+          className="pt-3 border-t border-[#D9CFBD]/80 dark:border-slate-800/80"
         >
           <div className="flex items-center justify-between gap-2 mb-2.5">
             <div className="flex items-center gap-1.5 text-xs font-black text-slate-800 dark:text-slate-200">

@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-warm-ivory: #FAF6EE;
+  --color-warm-ivory: #FAF6EF;
   --color-forest-green: #1B4332;
   --color-deep-bluegreen: #133E46;
   --color-antique-gold: #C29738;
@@ -19,8 +19,8 @@
   }
 
   body {
-    background-color: #FAF6EE;
-    color: #1e293b;
+    background-color: #EFE9DE;
+    color: #23201C;
   }
 
   body.dark {
@@ -42,41 +42,41 @@
 
   /* Theme-aware badge text & background variables for WCAG AA/AAA compliance */
   :root {
-    --badge-rule-bg: #d1fae5;
+    --badge-rule-bg: #D4EEDD;
     --badge-rule-text: #064e3b;
-    --badge-rule-border: #86efac;
+    --badge-rule-border: #86D5A8;
 
-    --badge-eat-bg: #ccfbf1;
+    --badge-eat-bg: #D0EFEB;
     --badge-eat-text: #134e4a;
-    --badge-eat-border: #5eead4;
+    --badge-eat-border: #72D9CC;
 
-    --badge-walk-bg: #fef3c7;
+    --badge-walk-bg: #F8E7BE;
     --badge-walk-text: #78350f;
-    --badge-walk-border: #fcd34d;
+    --badge-walk-border: #E8BF65;
 
-    --badge-sleep-bg: #e0e7ff;
+    --badge-sleep-bg: #E1E6F7;
     --badge-sleep-text: #312e81;
-    --badge-sleep-border: #a5b4fc;
+    --badge-sleep-border: #B2BFF5;
 
-    --badge-die-bg: #ffe4e6;
+    --badge-die-bg: #F8D8DC;
     --badge-die-text: #881337;
-    --badge-die-border: #fda4af;
+    --badge-die-border: #F3A0AD;
 
-    --badge-self-bg: #e0f2fe;
+    --badge-self-bg: #D9EDFA;
     --badge-self-text: #0c4a6e;
-    --badge-self-border: #7dd3fc;
+    --badge-self-border: #88CCF3;
 
-    --badge-friend-bg: #d1fae5;
+    --badge-friend-bg: #D4EEDD;
     --badge-friend-text: #064e3b;
-    --badge-friend-border: #86efac;
+    --badge-friend-border: #86D5A8;
 
-    --badge-enemy-bg: #ffe4e6;
+    --badge-enemy-bg: #F8D8DC;
     --badge-enemy-text: #881337;
-    --badge-enemy-border: #fda4af;
+    --badge-enemy-border: #F3A0AD;
 
-    --badge-neutral-bg: #f1f5f9;
-    --badge-neutral-text: #0f172a;
-    --badge-neutral-border: #cbd5e1;
+    --badge-neutral-bg: #E6E1D5;
+    --badge-neutral-text: #23201C;
+    --badge-neutral-border: #C8BEAC;
   }
 
   .dark, [data-theme="dark"] {
@@ -125,7 +125,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #F2ECE1;
+  background: #E8E0D2;
 }
 
 .dark ::-webkit-scrollbar-track {
@@ -133,7 +133,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D9CEBA;
+  background: #C8BCA4;
   border-radius: 4px;
 }
 
@@ -142,7 +142,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #C2B49D;
+  background: #B3A58B;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {

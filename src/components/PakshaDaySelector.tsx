@@ -100,12 +100,12 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
   return (
     <div
       id="paksha-day-selector-container"
-      className="bg-white dark:bg-slate-900/95 border border-[#E8DFCE] dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4"
+      className="bg-[#FAF6EF] dark:bg-slate-900/95 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4"
     >
       {/* Top row: Paksha Switcher */}
-      <div className="flex items-center justify-between gap-2.5 pb-3 border-b border-[#E8DFCE] dark:border-slate-800">
+      <div className="flex items-center justify-between gap-2.5 pb-3 border-b border-[#D9CFBD] dark:border-slate-800">
         {/* Paksha Switcher Tabs */}
-        <div className="flex items-center bg-[#FAF6EE] dark:bg-slate-950 p-1.5 rounded-2xl border border-[#E8DFCE] dark:border-slate-800">
+        <div className="flex items-center bg-[#EFE7DA] dark:bg-slate-950 p-1.5 rounded-2xl border border-[#D9CFBD] dark:border-slate-800">
           <button
             type="button"
             onClick={() => onSelectPakshaAndDay('valarpirai', selectedDay)}
@@ -137,7 +137,7 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
       </div>
 
       {/* Real-time Astronomical Calendar Status & Opener Bar */}
-      <div className="p-3.5 rounded-2xl bg-[#FAF6EE] dark:bg-slate-950/70 border border-[#E8DFCE] dark:border-slate-800/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="p-3.5 rounded-2xl bg-[#EFE7DA]/50 dark:bg-slate-950/70 border border-[#D9CFBD] dark:border-slate-800/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#C29738]/15 border border-[#C29738]/30 text-[#8C6B1C] dark:text-amber-300 font-bold text-[11px]">
             <Sparkles className="w-3.5 h-3.5 text-[#C29738]" strokeWidth={1.5} />
@@ -175,7 +175,7 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
           </div>
 
           {selectedDate && (
-            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-[#E8DFCE] dark:border-slate-700 font-medium">
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#FAF6EF] dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-[#D9CFBD] dark:border-slate-700 font-medium">
               {language === 'ta' ? 'தேர்வு:' : 'Selected:'}{' '}
               {selectedDate.toLocaleDateString(
                 language === 'ta' ? 'ta-IN' : 'en-US',
@@ -254,7 +254,7 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
                 className={`py-2 px-1 min-h-[50px] rounded-2xl border flex flex-col items-center justify-center transition-all cursor-pointer relative ${
                   isSelected
                     ? 'bg-[#1B4332] text-white border-[#1B4332] font-bold shadow-sm'
-                    : 'bg-[#FAF6EE] dark:bg-slate-950/80 hover:bg-[#EFE7D8] dark:hover:bg-slate-800/90 border-[#E8DFCE] dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                    : 'bg-[#EFE7DA]/60 dark:bg-slate-950/80 hover:bg-[#E5DBCB] dark:hover:bg-slate-800/90 border-[#D9CFBD] dark:border-slate-800 text-slate-700 dark:text-slate-300'
                 }`}
               >
                 <span className="text-xs sm:text-sm font-bold tracking-tight">{shortLabel}</span>
@@ -274,7 +274,7 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
       </div>
 
       {/* Active Day Description & Reference Chart Action */}
-      <div className="bg-[#FAF6EE] dark:bg-slate-950/70 border border-[#E8DFCE] dark:border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 text-xs">
+      <div className="bg-[#EFE7DA]/50 dark:bg-slate-950/70 border border-[#D9CFBD] dark:border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 text-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div
@@ -383,8 +383,8 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
       {/* Ruling & Dying Bird Reference Table Modal */}
       {showReferenceChart && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/80">
+          <div className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div className="p-4 border-b border-[#D9CFBD] dark:border-slate-800 flex items-center justify-between bg-[#EFE7DA]/70 dark:bg-slate-950/80">
               <div className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-amber-500" />
                 <div>
@@ -399,21 +399,21 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
               <button
                 type="button"
                 onClick={() => setShowReferenceChart(false)}
-                className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Paksha Switcher in Modal */}
-            <div className="p-3 bg-slate-50 dark:bg-slate-950/50 border-b border-slate-200 dark:border-slate-800 flex gap-2">
+            <div className="p-3 bg-[#EFE7DA]/40 dark:bg-slate-950/50 border-b border-[#D9CFBD] dark:border-slate-800 flex gap-2">
               <button
                 type="button"
                 onClick={() => setChartTab('valarpirai')}
                 className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
                   chartTab === 'valarpirai'
                     ? 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/40 shadow-xs'
-                    : 'bg-white dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800'
+                    : 'bg-[#FAF6EF] dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-[#D9CFBD] dark:border-slate-800'
                 }`}
               >
                 <Sun className="w-4 h-4 text-amber-500" />
@@ -425,7 +425,7 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
                 className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
                   chartTab === 'theipirai'
                     ? 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border border-indigo-500/40 shadow-xs'
-                    : 'bg-white dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800'
+                    : 'bg-[#FAF6EF] dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-[#D9CFBD] dark:border-slate-800'
                 }`}
               >
                 <Moon className="w-4 h-4 text-indigo-500" />
@@ -560,8 +560,8 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
       {/* Modal for Uploading / Providing Calculation for this Day */}
       {modalDay && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/80">
+          <div className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">
+            <div className="p-4 border-b border-[#D9CFBD] dark:border-slate-800 flex items-center justify-between bg-[#EFE7DA]/70 dark:bg-slate-950/80">
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-amber-500" />
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">
@@ -571,7 +571,7 @@ export const PakshaDaySelector: React.FC<PakshaDaySelectorProps> = ({
               <button
                 type="button"
                 onClick={() => setModalDay(null)}
-                className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

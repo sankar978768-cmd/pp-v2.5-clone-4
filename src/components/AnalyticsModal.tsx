@@ -60,9 +60,9 @@ export const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
       aria-labelledby="analytics-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-fadeIn"
     >
-      <div className="relative w-full max-w-5xl h-[92vh] max-h-[900px] bg-[#FAF6EE] dark:bg-slate-900 border border-[#E8DFCE] dark:border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-scaleUp">
+      <div className="relative w-full max-w-5xl h-[92vh] max-h-[900px] bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-scaleUp">
         {/* Modal Top Header */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-[#E8DFCE] dark:border-slate-800 bg-white dark:bg-slate-900/90 shrink-0">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-[#D9CFBD] dark:border-slate-800 bg-[#FAF6EF] dark:bg-slate-900/90 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#1B4332] text-amber-400 flex items-center justify-center font-bold text-lg shadow-xs">
               <Sparkles className="w-5 h-5 text-amber-400" />
@@ -82,7 +82,7 @@ export const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer active:scale-95"
+            className="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800 transition-colors cursor-pointer active:scale-95"
             aria-label={language === 'ta' ? 'மூடுக' : 'Close'}
           >
             <X className="w-5 h-5" />
@@ -90,14 +90,14 @@ export const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-2 px-4 sm:px-6 py-2.5 bg-[#FAF6EE] dark:bg-slate-950/70 border-b border-[#E8DFCE] dark:border-slate-800 shrink-0 overflow-x-auto scrollbar-none">
+        <div className="flex items-center gap-2 px-4 sm:px-6 py-2.5 bg-[#EFE7DA]/50 dark:bg-slate-950/70 border-b border-[#D9CFBD] dark:border-slate-800 shrink-0 overflow-x-auto scrollbar-none">
           <button
             type="button"
             onClick={() => setActiveTab('chart')}
             className={`min-h-[44px] px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
               activeTab === 'chart'
                 ? 'bg-[#1B4332] text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800'
             }`}
           >
             <TrendingUp className="w-4 h-4" />
@@ -110,7 +110,7 @@ export const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
             className={`min-h-[44px] px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
               activeTab === 'master'
                 ? 'bg-[#1B4332] text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800'
             }`}
           >
             <Table className="w-4 h-4" />
@@ -123,7 +123,7 @@ export const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
             className={`min-h-[44px] px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
               activeTab === 'relationships'
                 ? 'bg-[#1B4332] text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800'
             }`}
           >
             <Users className="w-4 h-4" />

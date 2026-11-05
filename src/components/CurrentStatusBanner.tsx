@@ -82,10 +82,10 @@ export const CurrentStatusBanner: React.FC<CurrentStatusBannerProps> = ({
     <section
       aria-label="Real-time Status"
       id="current-status-banner-card"
-      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden transition-all duration-200"
+      className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden transition-all duration-200"
     >
       {/* Top Bar: Live Status & Interactive Minute Scrubber */}
-      <div className="bg-slate-50 dark:bg-slate-950/80 px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+      <div className="bg-[#EFE7DA]/60 dark:bg-slate-950/80 px-4 py-2.5 border-b border-[#D9CFBD] dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div className="flex items-center gap-2.5 flex-wrap">
           <div className="flex items-center gap-1.5">
             <span
@@ -151,7 +151,7 @@ export const CurrentStatusBanner: React.FC<CurrentStatusBannerProps> = ({
             <button
               onClick={handleResetToLive}
               id="reset-live-time-scrubber-btn"
-              className="text-[11px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center gap-1 transition-colors cursor-pointer"
+              className="text-[11px] px-2 py-0.5 rounded bg-[#EFE7DA] dark:bg-slate-800 hover:bg-[#E5DBCB] dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center gap-1 transition-colors cursor-pointer"
               title={t('resetToCurrentLive')}
             >
               <RotateCcw className="w-2.5 h-2.5" />
@@ -164,7 +164,7 @@ export const CurrentStatusBanner: React.FC<CurrentStatusBannerProps> = ({
       {/* Main Status Grid: Active Jama & Active Anthardasa */}
       <div className="p-3.5 sm:p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Left: Selected Bird's Main Jama Activity */}
-        <div className="flex items-center gap-3.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-3.5 p-3 rounded-xl bg-[#EFE7DA]/50 dark:bg-slate-950/60 border border-[#D9CFBD] dark:border-slate-800">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-xl shrink-0 border shadow-xs"
             style={{
@@ -192,7 +192,7 @@ export const CurrentStatusBanner: React.FC<CurrentStatusBannerProps> = ({
         </div>
 
         {/* Right: Running Sub-Period (Anthardasa) */}
-        <div className="flex items-center gap-3.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-3.5 p-3 rounded-xl bg-[#EFE7DA]/50 dark:bg-slate-950/60 border border-[#D9CFBD] dark:border-slate-800">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-xl shrink-0 border shadow-xs"
             style={{

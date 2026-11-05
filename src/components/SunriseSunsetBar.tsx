@@ -201,10 +201,10 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
   return (
     <div
       id="sunrise-sunset-custom-bar"
-      className="bg-white dark:bg-slate-900 border border-[#E8DFCE] dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden transition-all duration-200"
+      className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden transition-all duration-200"
     >
       {/* 1. Header / Primary Status Bar */}
-      <div className="p-3.5 sm:p-4 border-b border-[#E8DFCE] dark:border-slate-800 bg-[#FAF6EE]/60 dark:bg-slate-950/60 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="p-3.5 sm:p-4 border-b border-[#D9CFBD] dark:border-slate-800 bg-[#EFE7DA]/60 dark:bg-slate-950/60 flex flex-col md:flex-row md:items-center justify-between gap-3">
         {/* Left Info: Current Sunrise & Sunset values */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-500 shrink-0">
@@ -227,7 +227,7 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
               {/* Other Location Detected: IST vs Local Time Toggle */}
               {isOtherLocation && (
                 <div
-                  className="flex items-center rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 p-0.5 text-xs font-semibold shadow-2xs"
+                  className="flex items-center rounded-xl bg-[#EFE7DA] dark:bg-slate-950 border border-[#D9CFBD] dark:border-slate-800 p-0.5 text-xs font-semibold shadow-2xs"
                   id="other-location-ist-toggle-group"
                 >
                   <button
@@ -236,8 +236,8 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
                     id="switch-time-local-btn"
                     className={`px-2.5 py-0.5 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
                       timeDisplayMode === 'local'
-                        ? 'bg-white dark:bg-slate-800 text-amber-800 dark:text-amber-300 font-bold shadow-2xs'
-                        : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                        ? 'bg-[#FAF6EF] dark:bg-slate-800 text-amber-850 dark:text-amber-300 font-bold shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
                     }`}
                     title={language === 'ta' ? 'இடத்தின் உள்ளூர் நேரம்' : 'Show times in location local time'}
                   >
@@ -343,7 +343,7 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
 
       {/* 2. INLINE Custom Sunrise, Sunset & Location Controls (NO POPUP MODAL) */}
       {(alwaysExpanded || isInlineExpanded) && (
-        <div className="p-4 sm:p-5 space-y-5 bg-white dark:bg-slate-900 animate-fadeIn">
+        <div className="p-4 sm:p-5 space-y-5 bg-[#FAF6EF] dark:bg-slate-900 animate-fadeIn">
           {geoError && (
             <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 text-rose-800 dark:text-rose-300 text-xs">
               {geoError}
@@ -409,7 +409,7 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
           />
 
           {/* Part B: Custom Sunrise, Sunset & Next Day Timings Inputs */}
-          <div className="pt-3 border-t border-[#E8DFCE] dark:border-slate-800 space-y-3">
+          <div className="pt-3 border-t border-[#D9CFBD] dark:border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5 uppercase tracking-wider">
                 <Sun className="w-3.5 h-3.5 text-amber-500" />
@@ -427,7 +427,7 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
             {/* 3 Time Input Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Sunrise (Today) */}
-              <div className="bg-[#FAF6EE]/80 dark:bg-slate-950 p-3 rounded-xl border border-[#E8DFCE] dark:border-slate-800 space-y-1.5 shadow-2xs">
+              <div className="bg-[#EFE7DA] dark:bg-slate-950 p-3 rounded-xl border border-[#D9CFBD] dark:border-slate-800 space-y-1.5 shadow-2xs">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-amber-700 dark:text-amber-300 flex items-center gap-1.5">
                     <Sun className="w-3.5 h-3.5 text-amber-500" />
@@ -443,12 +443,12 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
                     triggerLiveUpdate(e.target.value, tempSunset, tempNextSunrise, tempCity);
                   }}
                   id="custom-sunrise-input"
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-hidden focus:border-amber-500"
+                  className="w-full bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-hidden focus:border-amber-500"
                 />
               </div>
 
               {/* Sunset (Today) */}
-              <div className="bg-[#FAF6EE]/80 dark:bg-slate-950 p-3 rounded-xl border border-[#E8DFCE] dark:border-slate-800 space-y-1.5 shadow-2xs">
+              <div className="bg-[#EFE7DA] dark:bg-slate-950 p-3 rounded-xl border border-[#D9CFBD] dark:border-slate-800 space-y-1.5 shadow-2xs">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1.5">
                     <Sunset className="w-3.5 h-3.5 text-purple-500" />
@@ -464,12 +464,12 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
                     triggerLiveUpdate(tempSunrise, e.target.value, tempNextSunrise, tempCity);
                   }}
                   id="custom-sunset-input"
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-hidden focus:border-purple-500"
+                  className="w-full bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-hidden focus:border-purple-500"
                 />
               </div>
 
               {/* Next Sunrise (Tomorrow) */}
-              <div className="bg-[#FAF6EE]/80 dark:bg-slate-950 p-3 rounded-xl border border-[#E8DFCE] dark:border-slate-800 space-y-1.5 shadow-2xs">
+              <div className="bg-[#EFE7DA] dark:bg-slate-950 p-3 rounded-xl border border-[#D9CFBD] dark:border-slate-800 space-y-1.5 shadow-2xs">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
                     <Sunrise className="w-3.5 h-3.5 text-indigo-500" />
@@ -485,13 +485,13 @@ export const SunriseSunsetBar: React.FC<SunriseSunsetBarProps> = ({
                     triggerLiveUpdate(tempSunrise, tempSunset, e.target.value, tempCity);
                   }}
                   id="custom-next-sunrise-input"
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-hidden focus:border-indigo-500"
+                  className="w-full bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-hidden focus:border-indigo-500"
                 />
               </div>
             </div>
 
             {/* Calculated Duration Summary */}
-            <div className="p-3 rounded-xl bg-[#FAF6EE] dark:bg-slate-950 border border-[#E8DFCE] dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div className="p-3 rounded-xl bg-[#EFE7DA] dark:bg-slate-950 border border-[#D9CFBD] dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
               <div className="text-slate-600 dark:text-slate-400">
                 <span>{language === 'ta' ? 'பகல் கால அளவு: ' : 'Calculated Day: '}</span>
                 <strong className="text-slate-900 dark:text-white font-mono">{formatHoursMins(dayTotal)}</strong>

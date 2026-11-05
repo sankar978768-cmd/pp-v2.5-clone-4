@@ -42,7 +42,7 @@ export const LocationScreen: React.FC<LocationScreenProps> = (props) => {
   return (
     <div className="space-y-4 animate-fadeIn">
       {/* Screen Title Banner */}
-      <section className="bg-white dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#E8DFCE] dark:border-slate-800 shadow-xs">
+      <section className="bg-[#FAF6EF] dark:bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-[#D9CFBD] dark:border-slate-800 shadow-xs">
         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-800 dark:text-sky-400 text-xs font-bold mb-1.5">
           <MapPin className="w-3.5 h-3.5" />
           <span>{language === 'ta' ? 'இடம் & சூரிய கணக்கீடு' : 'Location & Solar Timings'}</span>

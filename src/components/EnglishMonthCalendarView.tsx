@@ -25,6 +25,7 @@ import {
   ShieldAlert,
   CalendarDays,
 } from 'lucide-react';
+import { ThithiTimeGraph } from './ThithiTimeGraph';
 
 export interface EnglishMonthCalendarViewProps {
   onSelectPakshaAndDay: (
@@ -34,6 +35,15 @@ export interface EnglishMonthCalendarViewProps {
   ) => void;
   selectedDate?: Date | null;
   onOpenModal?: () => void;
+  // Location parameters for location-based calculations
+  locationLat?: number | null;
+  locationLng?: number | null;
+  locationName?: string;
+  locationTimezoneOffset?: number;
+  timeDisplayMode?: 'local' | 'ist';
+  sunriseTime?: string;
+  sunsetTime?: string;
+  nextSunriseTime?: string;
 }
 
 const WEEKDAY_KEYS: DayOfWeek[] = [
@@ -50,6 +60,14 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
   onSelectPakshaAndDay,
   selectedDate: initialSelectedDate,
   onOpenModal,
+  locationLat,
+  locationLng,
+  locationName,
+  locationTimezoneOffset,
+  timeDisplayMode = 'local',
+  sunriseTime,
+  sunsetTime,
+  nextSunriseTime,
 }) => {
   const { language, t, getBirdName, getDayName, getDayShortName } =
     useLanguage();
@@ -67,12 +85,24 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
   });
 
   const todayDate = useMemo(() => new Date(), []);
-  const todayLunarInfo = useMemo(() => getLunarDayInfo(todayDate), [todayDate]);
+  const todayLunarInfo = useMemo(() => {
+    return getLunarDayInfo(
+      todayDate,
+      locationLat !== null && locationLat !== undefined ? locationLat : 13.0827,
+      locationLng !== null && locationLng !== undefined ? locationLng : 80.2707,
+      locationTimezoneOffset ?? 330
+    );
+  }, [todayDate, locationLat, locationLng, locationTimezoneOffset]);
 
   // Selected date lunar and tamil info
   const selectedLunarInfo = useMemo(() => {
-    return getLunarDayInfo(activeDate);
-  }, [activeDate]);
+    return getLunarDayInfo(
+      activeDate,
+      locationLat !== null && locationLat !== undefined ? locationLat : 13.0827,
+      locationLng !== null && locationLng !== undefined ? locationLng : 80.2707,
+      locationTimezoneOffset ?? 330
+    );
+  }, [activeDate, locationLat, locationLng, locationTimezoneOffset]);
 
   const selectedTamilInfo = useMemo(() => {
     return getTamilDateInfo(activeDate);
@@ -139,8 +169,186 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
 
   return (
     <div className="space-y-4">
+      {/* 1. TOP OF DATE SCREEN: Selected Date Detail & Pancha Pakshi Shastra Card with Thithi to Thithi Time Graph */}
+      <div
+        id="eng-cal-selected-date-details-top"
+        className="bg-[#FAF6EF] dark:bg-slate-950 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 space-y-3.5 shadow-xs"
+      >
+        {/* Thaniya Naal Red Alert Banner */}
+        {selectedTamilInfo.isThaniyaNaal && (
+          <div className="p-3 rounded-xl bg-rose-500/15 border-2 border-rose-500/80 text-rose-950 dark:text-rose-100 flex items-center gap-2.5 text-xs font-bold animate-pulse">
+            <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0" />
+            <div>
+              <div className="font-black text-rose-700 dark:text-rose-300">
+                🚨 {language === 'ta' ? 'தனிய நாள் எச்சரிக்கை (Red Alert)!' : 'Thaniya Naal Warning (Red Alert)!'}
+              </div>
+              <div className="text-[11px] mt-0.5 text-rose-900 dark:text-rose-200">
+                {language === 'ta'
+                  ? `${selectedTamilInfo.tamilMonthNameTa} ${selectedTamilInfo.tamilDate} தனிய நாளாகும். பஞ்சபட்சி சாஸ்திரப்படி சுபகாரியங்களைத் தவிர்க்கவும்.`
+                  : `${selectedTamilInfo.tamilMonthNameEn} ${selectedTamilInfo.tamilDate} is an inauspicious Thaniya Naal. Avoid starting auspicious ventures.`}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">
+                {language === 'ta' ? 'தேர்ந்தெடுக்கப்பட்ட நாள் விபரம்:' : 'Selected Date Details:'}
+              </span>
+              {isTodaySelected && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 font-bold">
+                  {t('todayButton')}
+                </span>
+              )}
+              {selectedTamilInfo.isThaniyaNaal && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-600 text-white font-black">
+                  🚨 தனிய நாள்
+                </span>
+              )}
+            </div>
+
+            <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
+              <span className="text-amber-700 dark:text-amber-400">
+                {activeDate.toLocaleDateString(
+                  language === 'ta' ? 'ta-IN' : 'en-US',
+                  {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  }
+                )}
+              </span>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
+              <span className="font-bold">
+                {selectedTamilInfo.tamilMonthNameTa} {selectedTamilInfo.tamilDate}
+              </span>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
+              <span>{selectedLunarInfo.moonEmoji}</span>
+              <span
+                className={
+                  selectedLunarInfo.paksha === 'valarpirai'
+                    ? 'text-amber-700 dark:text-amber-400 font-bold'
+                    : 'text-indigo-700 dark:text-indigo-400 font-bold'
+                }
+              >
+                {language === 'ta'
+                  ? selectedLunarInfo.paksha === 'valarpirai'
+                    ? 'வளர்பிறை'
+                    : 'தேய்பிறை'
+                  : selectedLunarInfo.paksha === 'valarpirai'
+                  ? 'Valarpirai'
+                  : 'Theipirai'}
+              </span>
+              <span className="font-extrabold text-slate-900 dark:text-white">
+                ({getDayName(selectedLunarInfo.dayOfWeek)})
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() =>
+              onSelectPakshaAndDay(
+                selectedLunarInfo.paksha,
+                selectedLunarInfo.dayOfWeek,
+                activeDate
+              )
+            }
+            id="eng-cal-apply-date-btn"
+            className="min-h-[44px] px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
+          >
+            <CheckCircle2 className="w-4 h-4" />
+            <span>{t('selectThisDateBtn')}</span>
+          </button>
+        </div>
+
+        {/* Astronomical & Shastra Details Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#D9CFBD] dark:border-slate-800 text-xs">
+          {/* Thithi in Tanglish */}
+          <div className="p-2.5 rounded-xl bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800">
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1">
+              <span>{language === 'ta' ? 'திதி (Tanglish)' : 'Tithi (Tanglish)'}</span>
+            </div>
+            <div className="font-black text-amber-700 dark:text-amber-400 mt-0.5 truncate text-xs sm:text-sm">
+              {selectedLunarInfo.tithiNameTanglish || selectedLunarInfo.tithiNameEn}{' '}
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-normal">
+                ({selectedLunarInfo.tithiNameTa})
+              </span>
+            </div>
+          </div>
+
+          {/* Moon Illumination */}
+          <div className="p-2.5 rounded-xl bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800">
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+              {language === 'ta' ? 'நிலவு வெளிச்சம்' : 'Illumination'}
+            </div>
+            <div className="font-black text-slate-900 dark:text-white mt-0.5">
+              {selectedLunarInfo.illuminationPercent}%
+            </div>
+          </div>
+
+          {/* Day / Night Ruler Bird */}
+          <div className="p-2.5 rounded-xl bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800">
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+              {language === 'ta' ? 'பகல் / இரவு அரசன்' : 'Day / Night Ruler'}
+            </div>
+            <div className="font-black text-amber-700 dark:text-amber-400 mt-0.5 truncate">
+              {selectedDayMeta?.dayRulingBird && selectedDayMeta?.nightRulingBird ? (
+                <>
+                  {getBirdName(selectedDayMeta.dayRulingBird)} /{' '}
+                  {getBirdName(selectedDayMeta.nightRulingBird)}
+                </>
+              ) : (
+                '—'
+              )}
+            </div>
+          </div>
+
+          {/* Dying Bird */}
+          <div className="p-2.5 rounded-xl bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800">
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+              {language === 'ta' ? 'இறக்கும் பட்சி' : 'Dying Bird'}
+            </div>
+            <div className="font-black text-rose-600 dark:text-rose-400 mt-0.5 truncate">
+              {(() => {
+                const dyingBird =
+                  selectedDayMeta?.dyingBird ||
+                  selectedDayMeta?.dayDyingBird ||
+                  selectedDayMeta?.nightDyingBird;
+                return dyingBird ? getBirdName(dyingBird) : '—';
+              })()}
+            </div>
+          </div>
+        </div>
+
+        {/* Dedicated Thithi to Thithi Time Graph Component */}
+        <ThithiTimeGraph
+          selectedDate={activeDate}
+          onSelectDate={(newDate) => {
+            setActiveDate(newDate);
+            const info = getLunarDayInfo(
+              newDate,
+              locationLat !== null && locationLat !== undefined ? locationLat : 13.0827,
+              locationLng !== null && locationLng !== undefined ? locationLng : 80.2707,
+              locationTimezoneOffset ?? 330
+            );
+            onSelectPakshaAndDay(info.paksha, info.dayOfWeek, newDate);
+          }}
+          locationLat={locationLat}
+          locationLng={locationLng}
+          locationName={locationName}
+          locationTimezoneOffset={locationTimezoneOffset}
+          timeDisplayMode={timeDisplayMode}
+          sunriseTime={sunriseTime}
+          sunsetTime={sunsetTime}
+          nextSunriseTime={nextSunriseTime}
+        />
+      </div>
+
       {/* Controls Bar: Prev/Next Month, Month/Year Dropdown, Today */}
-      <div className="bg-[#FAF6EE] dark:bg-slate-950/80 border border-[#E8DFCE] dark:border-slate-800 rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+      <div className="bg-[#FAF6EF] dark:bg-slate-950/80 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
         {/* Month Navigation */}
         <div className="flex items-center justify-between md:justify-start gap-2">
           <button
@@ -148,7 +356,7 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
             onClick={handlePrevMonth}
             aria-label={t('prevMonth')}
             id="eng-cal-prev-month-btn"
-            className="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shadow-2xs flex items-center justify-center active:scale-95"
+            className="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-[#EFE7DA] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 hover:bg-[#E5DCCB] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shadow-2xs flex items-center justify-center active:scale-95"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -166,7 +374,7 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
             onClick={handleNextMonth}
             aria-label={t('nextMonth')}
             id="eng-cal-next-month-btn"
-            className="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shadow-2xs flex items-center justify-center active:scale-95"
+            className="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-[#EFE7DA] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 hover:bg-[#E5DCCB] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shadow-2xs flex items-center justify-center active:scale-95"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -189,7 +397,7 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
             value={viewMonth}
             onChange={(e) => setViewMonth(Number(e.target.value))}
             aria-label="Select Month"
-            className="min-h-[44px] bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-xl px-2.5 py-2 font-bold focus:outline-none focus:border-amber-500 shadow-2xs"
+            className="min-h-[44px] bg-[#EFE7DA] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-xl px-2.5 py-2 font-bold focus:outline-none focus:border-amber-500 shadow-2xs"
           >
             {Array.from({ length: 12 }).map((_, idx) => (
               <option key={idx} value={idx}>
@@ -203,7 +411,7 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
             value={viewYear}
             onChange={(e) => setViewYear(Number(e.target.value))}
             aria-label="Select Year"
-            className="min-h-[44px] bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-xl px-2.5 py-2 font-bold focus:outline-none focus:border-amber-500 shadow-2xs"
+            className="min-h-[44px] bg-[#EFE7DA] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-xl px-2.5 py-2 font-bold focus:outline-none focus:border-amber-500 shadow-2xs"
           >
             {yearOptions.map((yr) => (
               <option key={yr} value={yr}>
@@ -227,7 +435,7 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
       </div>
 
       {/* Monthly Matrix Grid (7 columns: Sun to Sat) */}
-      <div className="bg-white dark:bg-slate-900/90 border border-[#E8DFCE] dark:border-slate-800 rounded-2xl p-2.5 sm:p-4 shadow-xs">
+      <div className="bg-[#FAF6EF] dark:bg-slate-900/90 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl p-2.5 sm:p-4 shadow-xs">
         {/* Weekday Column Headers */}
         <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 text-center">
           {WEEKDAY_KEYS.map((wkDay) => {
@@ -285,8 +493,8 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
                     : isTodayCell
                     ? 'bg-emerald-50 dark:bg-slate-800/90 border-emerald-500 dark:border-emerald-400/70 text-slate-900 dark:text-slate-100 ring-1 ring-emerald-500/40'
                     : isValarpirai
-                    ? 'bg-white dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 border-amber-300 dark:border-amber-500/20 text-slate-800 dark:text-slate-200'
-                    : 'bg-white dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 border-indigo-300 dark:border-indigo-500/20 text-slate-800 dark:text-slate-200'
+                    ? 'bg-[#F8F4EB] dark:bg-slate-900/90 hover:bg-[#EDE5D6] dark:hover:bg-slate-800 border-amber-300 dark:border-amber-500/20 text-slate-800 dark:text-slate-200'
+                    : 'bg-[#F8F4EB] dark:bg-slate-900/90 hover:bg-[#EDE5D6] dark:hover:bg-slate-800 border-indigo-300 dark:border-indigo-500/20 text-slate-800 dark:text-slate-200'
                 }`}
               >
                 {/* Top Row: English Day Number & Alert / Today marker */}
@@ -367,153 +575,6 @@ export const EnglishMonthCalendarView: React.FC<EnglishMonthCalendarViewProps> =
               </button>
             );
           })}
-        </div>
-      </div>
-
-      {/* Selected Date Detail & Pancha Pakshi Shastra Card */}
-      <div className="bg-[#FAF6EE] dark:bg-slate-950 border border-[#E8DFCE] dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 space-y-3.5 shadow-xs">
-        {/* Thaniya Naal Red Alert Banner */}
-        {selectedTamilInfo.isThaniyaNaal && (
-          <div className="p-3 rounded-xl bg-rose-500/15 border-2 border-rose-500/80 text-rose-950 dark:text-rose-100 flex items-center gap-2.5 text-xs font-bold animate-pulse">
-            <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0" />
-            <div>
-              <div className="font-black text-rose-700 dark:text-rose-300">
-                🚨 {language === 'ta' ? 'தனிய நாள் எச்சரிக்கை (Red Alert)!' : 'Thaniya Naal Warning (Red Alert)!'}
-              </div>
-              <div className="text-[11px] mt-0.5 text-rose-900 dark:text-rose-200">
-                {language === 'ta'
-                  ? `${selectedTamilInfo.tamilMonthNameTa} ${selectedTamilInfo.tamilDate} தனிய நாளாகும். பஞ்சபட்சி சாஸ்திரப்படி சுபகாரியங்களைத் தவிர்க்கவும்.`
-                  : `${selectedTamilInfo.tamilMonthNameEn} ${selectedTamilInfo.tamilDate} is an inauspicious Thaniya Naal. Avoid starting auspicious ventures.`}
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">
-                {language === 'ta' ? 'தேர்ந்தெடுக்கப்பட்ட நாள்:' : 'Selected Date Details:'}
-              </span>
-              {isTodaySelected && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 font-bold">
-                  {t('todayButton')}
-                </span>
-              )}
-              {selectedTamilInfo.isThaniyaNaal && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-600 text-white font-black">
-                  🚨 தனிய நாள்
-                </span>
-              )}
-            </div>
-
-            <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
-              <span className="text-amber-700 dark:text-amber-400">
-                {activeDate.toLocaleDateString(
-                  language === 'ta' ? 'ta-IN' : 'en-US',
-                  {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  }
-                )}
-              </span>
-              <span className="text-slate-400 dark:text-slate-600">•</span>
-              <span className="font-bold">
-                {selectedTamilInfo.tamilMonthNameTa} {selectedTamilInfo.tamilDate}
-              </span>
-              <span className="text-slate-400 dark:text-slate-600">•</span>
-              <span>{selectedLunarInfo.moonEmoji}</span>
-              <span
-                className={
-                  selectedLunarInfo.paksha === 'valarpirai'
-                    ? 'text-amber-700 dark:text-amber-400 font-bold'
-                    : 'text-indigo-700 dark:text-indigo-400 font-bold'
-                }
-              >
-                {language === 'ta'
-                  ? selectedLunarInfo.paksha === 'valarpirai'
-                    ? 'வளர்பிறை'
-                    : 'தேய்பிறை'
-                  : selectedLunarInfo.paksha === 'valarpirai'
-                  ? 'Valarpirai'
-                  : 'Theipirai'}
-              </span>
-              <span className="font-extrabold text-slate-900 dark:text-white">
-                ({getDayName(selectedLunarInfo.dayOfWeek)})
-              </span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() =>
-              onSelectPakshaAndDay(
-                selectedLunarInfo.paksha,
-                selectedLunarInfo.dayOfWeek,
-                activeDate
-              )
-            }
-            id="eng-cal-apply-date-btn"
-            className="min-h-[44px] px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
-          >
-            <CheckCircle2 className="w-4 h-4" />
-            <span>{t('selectThisDateBtn')}</span>
-          </button>
-        </div>
-
-        {/* Astronomical & Shastra Details */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#E8DFCE] dark:border-slate-800 text-xs">
-          <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
-              {language === 'ta' ? 'திதி' : 'Tithi'}
-            </div>
-            <div className="font-black text-slate-900 dark:text-white mt-0.5">
-              {language === 'ta'
-                ? selectedLunarInfo.tithiNameTa
-                : selectedLunarInfo.tithiNameEn}
-            </div>
-          </div>
-
-          <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
-              {language === 'ta' ? 'நிலவு வெளிச்சம்' : 'Illumination'}
-            </div>
-            <div className="font-black text-slate-900 dark:text-white mt-0.5">
-              {selectedLunarInfo.illuminationPercent}%
-            </div>
-          </div>
-
-          <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
-              {language === 'ta' ? 'பகல் / இரவு அரசன்' : 'Day / Night Ruler'}
-            </div>
-            <div className="font-black text-amber-700 dark:text-amber-400 mt-0.5">
-              {selectedDayMeta?.dayRulingBird && selectedDayMeta?.nightRulingBird ? (
-                <>
-                  {getBirdName(selectedDayMeta.dayRulingBird)} /{' '}
-                  {getBirdName(selectedDayMeta.nightRulingBird)}
-                </>
-              ) : (
-                '—'
-              )}
-            </div>
-          </div>
-
-          <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
-              {language === 'ta' ? 'இறக்கும் பட்சி' : 'Dying Bird'}
-            </div>
-            <div className="font-black text-rose-600 dark:text-rose-400 mt-0.5">
-              {(() => {
-                const dyingBird =
-                  selectedDayMeta?.dyingBird ||
-                  selectedDayMeta?.dayDyingBird ||
-                  selectedDayMeta?.nightDyingBird;
-                return dyingBird ? getBirdName(dyingBird) : '—';
-              })()}
-            </div>
-          </div>
         </div>
       </div>
     </div>

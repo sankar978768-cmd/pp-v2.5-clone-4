@@ -1,4 +1,5 @@
 import { PakshaType, DayOfWeek } from '../types';
+import { calculateTopocentricElongation } from './thithiCalculator';
 
 export interface LunarDayInfo {
   date: Date;
@@ -12,6 +13,7 @@ export interface LunarDayInfo {
   tithiNumber: number; // 1 to 15
   tithiNameEn: string;
   tithiNameTa: string;
+  tithiNameTanglish: string;
   elongation: number; // 0 to 360
   illuminationPercent: number; // 0 to 100
   moonPhaseNameEn: string;
@@ -22,40 +24,43 @@ export interface LunarDayInfo {
   isNewMoon: boolean;
 }
 
-const TITHI_NAMES_EN = [
-  'Prathama',
-  'Dwitiya',
-  'Tritiya',
-  'Chaturthi',
+export const TITHI_NAMES_TANGLISH = [
+  'Prathamai',
+  'Thuvithiyai',
+  'Thirithiyai',
+  'Chathurthi',
   'Panchami',
-  'Shashti',
-  'Saptami',
+  'Sashti',
+  'Sapthami',
   'Ashtami',
   'Navami',
-  'Dashami',
-  'Ekadashi',
-  'Dwadashi',
-  'Trayodashi',
-  'Chaturdashi',
+  'Dasami',
+  'Ekadhasi',
+  'Thuvadhasi',
+  'Thirayodhasi',
+  'Chathurdhasi',
   'Pournami', // 15
-  'Prathama',
-  'Dwitiya',
-  'Tritiya',
-  'Chaturthi',
+  'Prathamai',
+  'Thuvithiyai',
+  'Thirithiyai',
+  'Chathurthi',
   'Panchami',
-  'Shashti',
-  'Saptami',
+  'Sashti',
+  'Sapthami',
   'Ashtami',
   'Navami',
-  'Dashami',
-  'Ekadashi',
-  'Dwadashi',
-  'Trayodashi',
-  'Chaturdashi',
-  'Amavasya', // 30
+  'Dasami',
+  'Ekadhasi',
+  'Thuvadhasi',
+  'Thirayodhasi',
+  'Chathurdhasi',
+  'Amavasai', // 30
 ];
 
-const TITHI_NAMES_TA = [
+// All Thithi names in English are now formatted in Tanglish for authentic Pancha Pakshi usage
+const TITHI_NAMES_EN = TITHI_NAMES_TANGLISH;
+
+export const TITHI_NAMES_TA = [
   'பிரதமை',
   'துவிதியை',
   'திருதியை',
@@ -101,11 +106,15 @@ const DAYS_MAP: DayOfWeek[] = [
 const toRad = (deg: number) => (deg * Math.PI) / 180;
 
 /**
- * Calculates high precision lunar information (Paksha, Tithi, Illumination, Moon phase)
- * for any given date based on astronomical ephemeris equations.
+ * Calculates high precision location-based lunar information (Paksha, Tithi, Illumination, Moon phase)
+ * for any given date and observer location based on topocentric astronomical ephemeris equations.
  */
-export function getLunarDayInfo(inputDate: Date): LunarDayInfo {
-  // Normalize date to local noon or current local time
+export function getLunarDayInfo(
+  inputDate: Date,
+  lat: number = 13.0827,
+  lng: number = 80.2707,
+  timezoneOffsetMinutes: number = 330
+): LunarDayInfo {
   const date = new Date(inputDate);
   const now = new Date();
   const isToday =
@@ -113,34 +122,8 @@ export function getLunarDayInfo(inputDate: Date): LunarDayInfo {
     date.getMonth() === now.getMonth() &&
     date.getDate() === now.getDate();
 
-  const jd = date.getTime() / 86400000 + 2440587.5;
-  const d = jd - 2451545.0; // days since J2000.0
-
-  // Sun mean longitude & anomaly
-  const L_sun = (280.4665 + 0.98564736 * d) % 360;
-  const M_sun = (357.5291 + 0.98560028 * d) % 360;
-  const C_sun =
-    1.9148 * Math.sin(toRad(M_sun)) + 0.02 * Math.sin(toRad(2 * M_sun));
-  const sunTrueLong = (L_sun + C_sun + 360) % 360;
-
-  // Moon mean longitude & anomaly
-  const L_moon = (218.3165 + 13.17639648 * d) % 360;
-  const M_moon = (134.9634 + 13.06499295 * d) % 360;
-  const D_moon = (297.8502 + 12.19074912 * d) % 360; // mean elongation
-
-  // Moon true longitude with leading lunar perturbations
-  const moonCorr =
-    6.2886 * Math.sin(toRad(M_moon)) +
-    1.274 * Math.sin(toRad(2 * D_moon - M_moon)) +
-    0.6583 * Math.sin(toRad(2 * D_moon)) +
-    0.2136 * Math.sin(toRad(2 * M_moon)) -
-    0.1851 * Math.sin(toRad(M_sun)) -
-    0.1143 * Math.sin(toRad(2 * (L_moon - sunTrueLong)));
-
-  const moonTrueLong = (L_moon + moonCorr + 360) % 360;
-
-  let elongation = (moonTrueLong - sunTrueLong) % 360;
-  if (elongation < 0) elongation += 360;
+  // Calculate location-based topocentric elongation
+  const elongation = calculateTopocentricElongation(date, lat, lng);
 
   // Tithi is 12 degrees of elongation
   let tithiIndex = Math.floor(elongation / 12);
@@ -214,8 +197,9 @@ export function getLunarDayInfo(inputDate: Date): LunarDayInfo {
     paksha,
     tithiIndex,
     tithiNumber,
-    tithiNameEn: TITHI_NAMES_EN[tithiIndex] || 'Prathama',
+    tithiNameEn: TITHI_NAMES_TANGLISH[tithiIndex] || 'Prathamai',
     tithiNameTa: TITHI_NAMES_TA[tithiIndex] || 'பிரதமை',
+    tithiNameTanglish: TITHI_NAMES_TANGLISH[tithiIndex] || 'Prathamai',
     elongation,
     illuminationPercent,
     moonPhaseNameEn,

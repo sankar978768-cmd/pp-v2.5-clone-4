@@ -106,7 +106,7 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
   return (
     <div className="space-y-4 animate-fadeIn select-none">
       {/* 1. Header with View Toggle (Calendar Grid vs Thaniya Naatkal Master Table) */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E8DFCE] dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-2 border-b border-[#D9CFBD] dark:border-slate-800">
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-800 dark:text-rose-400 text-xs font-bold mb-1">
             <Flame className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
@@ -121,13 +121,13 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
         </div>
 
         {/* View Switcher Pills */}
-        <div className="inline-flex items-center rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 p-1 text-xs font-semibold self-start sm:self-auto shadow-2xs">
+        <div className="inline-flex items-center rounded-xl bg-[#EFE7DA] dark:bg-slate-950 border border-[#D9CFBD] dark:border-slate-800 p-1 text-xs font-semibold self-start sm:self-auto shadow-2xs">
           <button
             type="button"
             onClick={() => setViewMode('calendar')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
               viewMode === 'calendar'
-                ? 'bg-white dark:bg-slate-850 text-slate-950 dark:text-white font-extrabold shadow-xs'
+                ? 'bg-[#FAF6EF] dark:bg-slate-850 text-slate-950 dark:text-white font-extrabold shadow-xs'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -215,7 +215,7 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap cursor-pointer transition-all shrink-0 ${
                     isSelected
                       ? 'bg-[#1B4332] text-white shadow-xs'
-                      : 'bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-[#E8DFCE] dark:border-slate-800'
+                      : 'bg-[#FAF6EF] dark:bg-slate-900 hover:bg-[#EFE7DA] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-[#D9CFBD] dark:border-slate-800'
                   }`}
                 >
                   <span>{m.nameTa}</span>
@@ -225,13 +225,13 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
           </div>
 
           {/* Month Bar with Prev / Next & Jump to Today */}
-          <div className="bg-[#FAF6EE]/90 dark:bg-slate-950 p-2.5 rounded-xl border border-[#E8DFCE] dark:border-slate-800 flex items-center justify-between">
+          <div className="bg-[#FAF6EF] dark:bg-slate-950 p-2.5 rounded-xl border border-[#D9CFBD] dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={handlePrevMonth}
                 id="tamil-cal-prev-month"
-                className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-[#E8DFCE] dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors shadow-2xs"
+                className="p-1.5 rounded-lg bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800 hover:bg-[#EFE7DA] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors shadow-2xs"
                 title={language === 'ta' ? 'முந்தைய மாதம்' : 'Previous Month'}
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -245,7 +245,7 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
                 type="button"
                 onClick={handleNextMonth}
                 id="tamil-cal-next-month"
-                className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-[#E8DFCE] dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors shadow-2xs"
+                className="p-1.5 rounded-lg bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800 hover:bg-[#EFE7DA] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors shadow-2xs"
                 title={language === 'ta' ? 'அடுத்த மாதம்' : 'Next Month'}
               >
                 <ChevronRight className="w-4 h-4" />
@@ -269,7 +269,7 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
           </div>
 
           {/* 7-Column Tamil Monthly Grid */}
-          <div className="bg-white dark:bg-slate-900 border border-[#E8DFCE] dark:border-slate-800 rounded-2xl p-2 sm:p-3 shadow-xs">
+          <div className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800 rounded-2xl p-2 sm:p-3 shadow-xs">
             {/* Weekday Column Headers */}
             <div className="grid grid-cols-7 gap-1 sm:gap-1.5 mb-2 text-center">
               {WEEKDAY_HEADERS.map((h, i) => (
@@ -321,7 +321,7 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
                         ? 'bg-[#1B4332] text-white border-[#1B4332] shadow-md ring-2 ring-emerald-500/50 font-bold z-10'
                         : isToday
                         ? 'bg-amber-50 dark:bg-slate-800 border-amber-500 text-slate-900 dark:text-white ring-1 ring-amber-500/40'
-                        : 'bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800 border-[#E8DFCE] dark:border-slate-800 text-slate-900 dark:text-slate-100'
+                        : 'bg-[#F8F4EB] dark:bg-slate-900/90 hover:bg-[#EDE5D6] dark:hover:bg-slate-800 border-[#D9CFBD] dark:border-slate-800 text-slate-900 dark:text-slate-100'
                     }`}
                   >
                     {/* Top Row: Tamil Date Number & Status Indicator */}
@@ -399,7 +399,7 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
           </div>
 
           {/* Calendar Legend */}
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-[#E8DFCE] dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="p-3 rounded-xl bg-[#FAF6EF] dark:bg-slate-950 border border-[#D9CFBD] dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-4 flex-wrap">
               <div className="flex items-center gap-1.5">
                 <span className="w-3.5 h-3.5 rounded bg-rose-500 border border-rose-600 text-white text-[9px] flex items-center justify-center font-bold">
@@ -429,7 +429,7 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
       {viewMode === 'table' && (
         <div className="space-y-4 animate-scaleIn">
           {/* Ornate Frame Card */}
-          <div className="bg-gradient-to-b from-[#FFFDF9] to-[#FAF6EE] dark:from-slate-900 dark:to-slate-950 border-2 border-amber-600/40 dark:border-amber-500/30 rounded-2xl p-3 sm:p-5 shadow-lg relative overflow-hidden">
+          <div className="bg-gradient-to-b from-[#FBF8F1] to-[#FAF6EF] dark:from-slate-900 dark:to-slate-950 border-2 border-amber-600/40 dark:border-amber-500/30 rounded-2xl p-3 sm:p-5 shadow-lg relative overflow-hidden">
             {/* Ornate Top Banner Header */}
             <div className="text-center pb-3 border-b-2 border-amber-500/30 mb-4">
               <div className="inline-block px-5 py-1.5 rounded-xl bg-[#591C21] text-amber-100 font-black text-lg sm:text-xl tracking-wide shadow-md border border-amber-400/40">
@@ -471,7 +471,7 @@ export const TamilMonthCalendarView: React.FC<TamilMonthCalendarViewProps> = ({
                             ? 'bg-amber-500/15 font-black text-amber-900 dark:text-amber-200'
                             : idx % 2 === 0
                             ? 'bg-amber-500/5 hover:bg-amber-500/10'
-                            : 'bg-white/60 dark:bg-slate-900/40 hover:bg-amber-500/10'
+                            : 'bg-[#FAF6EF]/60 dark:bg-slate-900/40 hover:bg-amber-500/10'
                         }`}
                         title="Click to view month calendar"
                       >

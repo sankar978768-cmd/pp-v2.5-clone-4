@@ -129,9 +129,9 @@ export const TimeLookupModal: React.FC<TimeLookupModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="bg-[#FAF6EF] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/60">
+        <div className="p-4 border-b border-[#D9CFBD] dark:border-slate-800 flex items-center justify-between bg-[#EFE7DA]/70 dark:bg-slate-950/60">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-amber-500" />
             <h3 className="font-bold text-base text-slate-900 dark:text-white">
@@ -142,7 +142,7 @@ export const TimeLookupModal: React.FC<TimeLookupModalProps> = ({
             onClick={onClose}
             id="close-time-lookup-btn"
             aria-label="Close"
-            className="min-h-[44px] min-w-[44px] rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-center cursor-pointer"
+            className="min-h-[44px] min-w-[44px] rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-[#EFE7DA] dark:hover:bg-slate-800 transition-colors flex items-center justify-center cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -294,7 +294,7 @@ export const TimeLookupModal: React.FC<TimeLookupModalProps> = ({
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+                  <div className="bg-[#EFE7DA]/50 dark:bg-slate-900 p-3 rounded-lg border border-[#D9CFBD] dark:border-slate-800">
                     <div className="text-[11px] text-slate-500 dark:text-slate-400">
                       {language === 'ta' ? 'பட்சியின் முக்கிய தொழில்:' : "Selected Bird's Jama State:"}
                     </div>
@@ -306,7 +306,7 @@ export const TimeLookupModal: React.FC<TimeLookupModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+                  <div className="bg-[#EFE7DA]/50 dark:bg-slate-900 p-3 rounded-lg border border-[#D9CFBD] dark:border-slate-800">
                     <div className="text-[11px] text-slate-500 dark:text-slate-400">
                       {language === 'ta' ? 'அந்தர்தசை தொழில்:' : 'Active Sub-Period (Anthardasa):'}
                     </div>
@@ -325,7 +325,7 @@ export const TimeLookupModal: React.FC<TimeLookupModalProps> = ({
                 </div>
 
                 {/* Auspicious Guidance */}
-                <div className="bg-white dark:bg-slate-900/90 rounded-lg p-3 border border-slate-200 dark:border-slate-800">
+                <div className="bg-[#EFE7DA]/50 dark:bg-slate-900/90 rounded-lg p-3 border border-[#D9CFBD] dark:border-slate-800">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white mb-1">
                     {result.activeSubPeriod.activity === 'Rule' || result.activeSubPeriod.activity === 'Eat' ? (
                       <CheckCircle2 className="w-4 h-4 text-emerald-500" />

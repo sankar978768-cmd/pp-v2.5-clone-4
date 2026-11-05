@@ -64,7 +64,7 @@ export const FixedTopHeader: React.FC<FixedTopHeaderProps> = ({
   return (
     <header
       id="fixed-top-header"
-      className="fixed top-0 left-0 right-0 z-40 w-full bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-[#E8DFCE] dark:border-slate-800 shadow-xs transition-colors duration-150 pt-[calc(4px+env(safe-area-inset-top,0px))] pb-1 sm:pb-1.5"
+      className="fixed top-0 left-0 right-0 z-40 w-full bg-[#FAF6EF]/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-[#D9CFBD] dark:border-slate-800 shadow-xs transition-colors duration-150 pt-[calc(4px+env(safe-area-inset-top,0px))] pb-1 sm:pb-1.5"
     >
       <div className="max-w-7xl mx-auto px-2 sm:px-3">
         <div className="flex items-center justify-between gap-1.5 sm:gap-2 h-8 sm:h-9">
@@ -102,7 +102,7 @@ export const FixedTopHeader: React.FC<FixedTopHeaderProps> = ({
             {/* IST Switcher (Always accessible in top bar) */}
             <div
               id="header-ist-switcher"
-              className="h-7 sm:h-8 p-0.5 rounded-lg bg-[#FAF6EE] dark:bg-slate-900 border border-[#E8DFCE] dark:border-slate-800 flex items-center shadow-2xs select-none"
+              className="h-7 sm:h-8 p-0.5 rounded-lg bg-[#EFE7DA] dark:bg-slate-900 border border-[#D9CFBD] dark:border-slate-800 flex items-center shadow-2xs select-none"
             >
               <button
                 type="button"
@@ -141,7 +141,7 @@ export const FixedTopHeader: React.FC<FixedTopHeaderProps> = ({
               type="button"
               onClick={onOpenCalendar}
               id="header-panchang-grid-btn"
-              className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-[#FAF6EE] dark:bg-slate-900 hover:bg-amber-500/15 dark:hover:bg-amber-500/20 text-slate-700 dark:text-slate-200 hover:text-amber-800 dark:hover:text-amber-300 border border-[#E8DFCE] dark:border-slate-800 hover:border-amber-400/50 transition-all cursor-pointer flex items-center justify-center active:scale-95 shadow-2xs touch-manipulation select-none"
+              className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-[#EFE7DA] dark:bg-slate-900 hover:bg-amber-500/15 dark:hover:bg-amber-500/20 text-slate-700 dark:text-slate-200 hover:text-amber-800 dark:hover:text-amber-300 border border-[#D9CFBD] dark:border-slate-800 hover:border-amber-400/50 transition-all cursor-pointer flex items-center justify-center active:scale-95 shadow-2xs touch-manipulation select-none"
               title={
                 language === 'ta'
                   ? 'பஞ்சாங்கம் நாட்காட்டி கட்டம் (English Calendar Default)'
@@ -160,11 +160,11 @@ export const FixedTopHeader: React.FC<FixedTopHeaderProps> = ({
             <button
               type="button"
               onClick={() => setTheme(theme === 'dark' ? 'bright' : 'dark')}
-              className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer flex items-center justify-center active:scale-95 shadow-2xs"
+              className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-[#EFE7DA] dark:bg-slate-900 hover:bg-[#E5DCCB] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-[#D9CFBD] dark:border-slate-800 transition-colors cursor-pointer flex items-center justify-center active:scale-95 shadow-2xs"
               title={language === 'ta' ? 'தோற்றம் மாற்றவும்' : 'Toggle Theme'}
               aria-label={language === 'ta' ? 'தோற்றம் மாற்றவும்' : 'Toggle Theme'}
             >
-              <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 dark:hidden text-amber-500" />
+              <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 dark:hidden text-amber-600" />
               <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 hidden dark:block text-amber-400" />
             </button>
 
@@ -172,7 +172,7 @@ export const FixedTopHeader: React.FC<FixedTopHeaderProps> = ({
             <button
               type="button"
               onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-              className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 text-[10px] sm:text-[11px] font-extrabold flex items-center justify-center text-center transition-colors cursor-pointer active:scale-95 shadow-2xs"
+              className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-[#EFE7DA] dark:bg-slate-900 hover:bg-[#E5DCCB] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-[#D9CFBD] dark:border-slate-800 text-[10px] sm:text-[11px] font-extrabold flex items-center justify-center text-center transition-colors cursor-pointer active:scale-95 shadow-2xs"
               title={language === 'en' ? 'Switch to Tamil' : 'Switch to English'}
               aria-label={language === 'en' ? 'Switch to Tamil' : 'Switch to English'}
             >
@@ -185,7 +185,7 @@ export const FixedTopHeader: React.FC<FixedTopHeaderProps> = ({
         {currentDayMeta && (
           <div
             id="top-bar-rulers-strip"
-            className="flex items-center justify-between gap-1 sm:gap-2 pt-1 mt-0.5 border-t border-[#E8DFCE]/60 dark:border-slate-800/60 overflow-x-auto no-scrollbar text-[10px] sm:text-[11px]"
+            className="flex items-center justify-between gap-1 sm:gap-2 pt-1 mt-0.5 border-t border-[#D9CFBD]/60 dark:border-slate-800/60 overflow-x-auto no-scrollbar text-[10px] sm:text-[11px]"
           >
             {/* Day Ruler Chip */}
             <div

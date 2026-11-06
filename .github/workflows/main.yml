@@ -1,0 +1,176 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Gradle 8.13
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+
+      - name: Build Website, Fix White Screen & Generate APK
+        run: |
+          # ==========================================
+          # 1. CHANGE YOUR APP NAME BELOW:
+          APP_NAME="SK Panchapachi"
+          APP_ID="com.sk.panchapachi"
+          # ==========================================
+
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
+
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+          # Find icon.png anywhere in the repo
+          ICON_SOURCE=""
+          for f in icon.png Icon.png ICON.PNG logo.png public/icon.png src/assets/icon.png; do
+            if [ -f "$f" ]; then
+              ICON_SOURCE="$(realpath "$f")"
+              break
+            fi
+          done
+          if [ -z "$ICON_SOURCE" ]; then
+            FOUND_IMG=$(find . -maxdepth 3 \( -iname "icon.png" -o -iname "logo.png" -o -iname "*icon*.png" \) ! -path "*/node_modules/*" | head -n 1)
+            if [ -n "$FOUND_IMG" ]; then
+              ICON_SOURCE="$(realpath "$FOUND_IMG")"
+            fi
+          fi
+          echo "Using Icon Source: $ICON_SOURCE"
+
+          # Locate project directory
+          PROJECT_DIR="."
+          if [ ! -f "package.json" ] && [ ! -f "index.html" ]; then
+            FOUND_PKG=$(find . -maxdepth 2 -name "package.json" ! -path "*/node_modules/*" | head -n 1)
+            if [ -n "$FOUND_PKG" ]; then
+              PROJECT_DIR=$(dirname "$FOUND_PKG")
+            fi
+          fi
+          cd "$PROJECT_DIR"
+
+          # Build React/Vite project
+          if [ -f "package.json" ]; then
+            npm install --legacy-peer-deps || npm install --force
+            if ls vite.config.* 1> /dev/null 2>&1; then
+              sed -i 's/base\s*:\s*["'\''][^"'\'']*["'\'']/base: ".\/"/g' vite.config.* || true
+            fi
+            npx vite build --base=./ || npm run build -- --base=./ || npm run build
+          fi
+
+          # Create Cordova project
+          npm install -g cordova
+          rm -rf /tmp/MyApp
+          cordova create /tmp/MyApp "$APP_ID" "SKPanchapachi"
+          rm -rf /tmp/MyApp/www/*
+
+          # Copy built website files
+          if [ -d "dist" ]; then
+            cp -r dist/* /tmp/MyApp/www/
+          elif [ -d "build" ]; then
+            cp -r build/* /tmp/MyApp/www/
+          elif [ -d "out" ]; then
+            cp -r out/* /tmp/MyApp/www/
+          else
+            find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name '.github' ! -name 'github' ! -name 'node_modules' -exec cp -r {} /tmp/MyApp/www/ \;
+          fi
+
+          # Ensure index.html exists
+          if [ ! -f "/tmp/MyApp/www/index.html" ]; then
+            FIRST_HTML=$(find /tmp/MyApp/www -maxdepth 2 -name "*.html" | head -n 1)
+            if [ -n "$FIRST_HTML" ]; then
+              cp "$FIRST_HTML" /tmp/MyApp/www/index.html
+            fi
+          fi
+
+          # Fix asset paths and React Router
+          if [ -f "/tmp/MyApp/www/index.html" ]; then
+            sed -i 's|src="/|src="./|g; s|href="/|href="./|g' /tmp/MyApp/www/index.html
+            sed -i '/Content-Security-Policy/d' /tmp/MyApp/www/index.html
+            if [ -d "/tmp/MyApp/www/assets" ]; then
+              sed -i '/<script type="importmap">/,/<\/script>/d' /tmp/MyApp/www/index.html
+            fi
+            printf '<script>\n(function(){\ntry{\nif(window.location.protocol.indexOf("http")===0 && window.location.pathname.endsWith("/index.html")){\nwindow.history.replaceState(null,"",window.location.pathname.replace(/\\/index\\.html$/,"/"));\n}\n}catch(e){}\n})();\n</script>\n' > /tmp/inject.js
+            sed -i "/<head>/r /tmp/inject.js" /tmp/MyApp/www/index.html
+          fi
+
+          cd /tmp/MyApp
+
+          # Convert icon.png into launcher icon, adaptive foreground, and splash screen
+          sudo apt-get update -y && sudo apt-get install -y imagemagick || true
+          if [ -n "$ICON_SOURCE" ] && [ -f "$ICON_SOURCE" ]; then
+            convert "$ICON_SOURCE" -resize 512x512! /tmp/MyApp/icon_clean.png 2>/dev/null || cp "$ICON_SOURCE" /tmp/MyApp/icon_clean.png
+            convert "$ICON_SOURCE" -resize 330x330 -gravity center -background none -extent 512x512 /tmp/MyApp/icon_foreground.png 2>/dev/null || cp /tmp/MyApp/icon_clean.png /tmp/MyApp/icon_foreground.png
+            convert "$ICON_SOURCE" -resize 300x300 -gravity center -background none -extent 512x512 /tmp/MyApp/splash_clean.png 2>/dev/null || cp /tmp/MyApp/icon_clean.png /tmp/MyApp/splash_clean.png
+          else
+            convert -size 512x512 xc:none /tmp/MyApp/icon_clean.png
+            convert -size 512x512 xc:none /tmp/MyApp/icon_foreground.png
+            convert -size 512x512 xc:none /tmp/MyApp/splash_clean.png
+          fi
+
+          # Configure Cordova config.xml
+          sed -i "s|<name>.*</name>|<name>$APP_NAME</name>|g" config.xml
+          printf '    <allow-navigation href="*" />\n    <access origin="*" />\n    <preference name="MixedContentMode" value="0" />\n    <preference name="AndroidXEnabled" value="true" />\n    <preference name="hostname" value="localhost" />\n    <preference name="AndroidInsecureFileModeEnabled" value="false" />\n    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="splash_clean.png" />\n    <preference name="AndroidWindowSplashScreenBackground" value="#FFFFFF" />\n    <icon src="icon_clean.png" />\n</widget>\n' > /tmp/cordova_prefs.xml
+          sed -i '/<\/widget>/ { r /tmp/cordova_prefs.xml
+          d }' config.xml
+
+          cordova platform add android@14.0.1
+
+          # 1. Prepare files and platform directory structure
+          cordova prepare android
+
+          # 2. Allow cleartext HTTP/external network calls
+          if [ -f "platforms/android/app/src/main/AndroidManifest.xml" ]; then
+            sed -i 's/<application/<application android:usesCleartextTraffic="true"/g' platforms/android/app/src/main/AndroidManifest.xml
+          fi
+
+          # 3. Splash screen replacement
+          find platforms/android/app/src/main/res -name "ic_cdv_splashscreen*" -delete || true
+          mkdir -p platforms/android/app/src/main/res/drawable
+          cp /tmp/MyApp/splash_clean.png platforms/android/app/src/main/res/drawable/ic_cdv_splashscreen.png
+
+          # 4. Overwrite mipmap icons with proper Android 8.0+ Adaptive Icon XMLs
+          if [ -f "/tmp/MyApp/icon_clean.png" ]; then
+            for dir in platforms/android/app/src/main/res/mipmap-*; do
+              if [ -d "$dir" ] && [[ "$dir" != *"anydpi"* ]]; then
+                cp /tmp/MyApp/icon_clean.png "$dir/ic_launcher.png" || true
+                cp /tmp/MyApp/icon_clean.png "$dir/ic_launcher_round.png" || true
+                cp /tmp/MyApp/icon_foreground.png "$dir/ic_launcher_foreground.png" || true
+              fi
+            done
+
+            ADAPTIVE_DIR="platforms/android/app/src/main/res/mipmap-anydpi-v26"
+            mkdir -p "$ADAPTIVE_DIR"
+
+            printf '<?xml version="1.0" encoding="utf-8"?>\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n    <background android:drawable="@android:color/white"/>\n    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>\n</adaptive-icon>\n' > "$ADAPTIVE_DIR/ic_launcher.xml"
+            cp "$ADAPTIVE_DIR/ic_launcher.xml" "$ADAPTIVE_DIR/ic_launcher_round.xml"
+          fi
+
+          # 5. Compile the Android APK directly
+          cordova compile android
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: /tmp/MyApp/platforms/android/app/build/outputs/apk/debug/app-debug.apk

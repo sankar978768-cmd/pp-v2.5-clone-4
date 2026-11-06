@@ -166,3 +166,60 @@ export const RELATIONSHIP_META: Record<RelationshipType, RelationshipMeta> = {
     tamilDescription: 'சம பட்சி. நடுநிலையான நடுத்தர பலன்களைத் தரும்.',
   },
 };
+
+export interface RelationshipTagInfo {
+  tag: 'S' | 'F' | 'E' | 'N';
+  labelEn: string;
+  labelTa: string;
+  badgeBg: string;
+  badgeText: string;
+  badgeBorder: string;
+}
+
+/**
+ * Returns user-specified single-letter shorthand tags:
+ * F - Friend
+ * E - Enemy
+ * S - Self
+ */
+export function getRelationshipTag(rel: RelationshipType): RelationshipTagInfo {
+  switch (rel) {
+    case 'self':
+      return {
+        tag: 'S',
+        labelEn: 'Self',
+        labelTa: 'சுயம்',
+        badgeBg: 'bg-sky-100 dark:bg-sky-950/70 badge-rel-self',
+        badgeText: 'text-sky-900 dark:text-sky-200',
+        badgeBorder: 'border-sky-300 dark:border-sky-800/80',
+      };
+    case 'friend':
+      return {
+        tag: 'F',
+        labelEn: 'Friend',
+        labelTa: 'நட்பு',
+        badgeBg: 'bg-emerald-100 dark:bg-emerald-950/70 badge-rel-friend',
+        badgeText: 'text-emerald-900 dark:text-emerald-200',
+        badgeBorder: 'border-emerald-300 dark:border-emerald-800/80',
+      };
+    case 'enemy':
+      return {
+        tag: 'E',
+        labelEn: 'Enemy',
+        labelTa: 'பகை',
+        badgeBg: 'bg-rose-100 dark:bg-rose-950/70 badge-rel-enemy',
+        badgeText: 'text-rose-900 dark:text-rose-200',
+        badgeBorder: 'border-rose-300 dark:border-rose-800/80',
+      };
+    default:
+      return {
+        tag: 'N',
+        labelEn: 'Neutral',
+        labelTa: 'சமம்',
+        badgeBg: 'bg-slate-100 dark:bg-slate-800/80 badge-rel-neutral',
+        badgeText: 'text-slate-800 dark:text-slate-200',
+        badgeBorder: 'border-slate-300 dark:border-slate-700',
+      };
+  }
+}
+

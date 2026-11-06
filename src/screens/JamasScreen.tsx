@@ -19,6 +19,7 @@ import {
   Crown,
   AlertTriangle,
   Zap,
+  Table,
 } from 'lucide-react';
 
 export interface JamasScreenProps {
@@ -38,6 +39,7 @@ export interface JamasScreenProps {
   selectedCalendarDate?: Date | null;
   dayMeta?: DayCalculationMeta;
   onSelectBird?: (birdId: BirdId) => void;
+  onOpenMasterComparison?: () => void;
 }
 
 export const JamasScreen: React.FC<JamasScreenProps> = ({
@@ -57,6 +59,7 @@ export const JamasScreen: React.FC<JamasScreenProps> = ({
   selectedCalendarDate,
   dayMeta,
   onSelectBird,
+  onOpenMasterComparison,
 }) => {
   const { language, t, getBirdName, getPakshaName, getDayName } = useLanguage();
   const currentBirdDisplayName = getBirdName(selectedBird);
@@ -229,6 +232,19 @@ export const JamasScreen: React.FC<JamasScreenProps> = ({
                 </>
               )}
             </button>
+
+            {onOpenMasterComparison && (
+              <button
+                type="button"
+                onClick={onOpenMasterComparison}
+                id="open-master-comparison-excel-btn"
+                className="min-h-[42px] text-xs px-3 py-1.5 rounded-xl border border-[#1B4332]/40 dark:border-emerald-500/40 bg-[#1B4332]/10 dark:bg-emerald-950/40 text-[#1B4332] dark:text-emerald-300 hover:bg-[#1B4332] hover:text-white dark:hover:bg-emerald-700 font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                title={language === 'ta' ? '5 பட்சிகள் ஒப்பீடு & எக்செல் நகல்' : '5 Birds Comparison & Excel Export'}
+              >
+                <Table className="w-3.5 h-3.5" />
+                <span>{language === 'ta' ? '5 பட்சிகள் & எக்செல்' : '5 Birds & Excel'}</span>
+              </button>
+            )}
           </div>
         </div>
 

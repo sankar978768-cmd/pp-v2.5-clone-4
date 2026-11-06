@@ -549,6 +549,7 @@ export default function App() {
             selectedCalendarDate={selectedCalendarDate}
             dayMeta={dayMeta}
             onSelectBird={(id) => setSelectedBird(id)}
+            onOpenMasterComparison={() => openAnalyticsTab('master')}
           />
         )}
 
@@ -611,6 +612,7 @@ export default function App() {
             sunriseTime={displaySunrise}
             sunsetTime={displaySunset}
             nextSunriseTime={displayNextSunrise}
+            onNavigateToTab={(tab) => handleSelectTab(tab)}
           />
         )}
       </main>
@@ -671,6 +673,10 @@ export default function App() {
         displaySunset={displaySunset}
         displayNextSunrise={displayNextSunrise}
         selectedPaksha={selectedPaksha}
+        selectedDay={selectedDay}
+        selectedCalendarDate={selectedCalendarDate}
+        locationName={locationName}
+        timeDisplayMode={timeDisplayMode}
       />
 
       {/* Time Lookup Modal */}

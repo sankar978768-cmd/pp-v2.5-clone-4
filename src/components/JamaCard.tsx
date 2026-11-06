@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { BirdId, Jama, SubPeriod, PakshaType } from '../types';
 import { BIRDS, ACTIVITY_DETAILS } from '../data/panchaPakshiData';
-import { getBirdRelationship, RELATIONSHIP_META } from '../data/birdRelationships';
-import { Star, ChevronDown, ChevronUp, Sun, Moon, Eye } from 'lucide-react';
+import { getBirdRelationship, RELATIONSHIP_META, getRelationshipTag } from '../data/birdRelationships';
+import { Star, ChevronDown, ChevronUp, Sun, Moon, Eye, Copy, Check, Table, FileText, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { copyJamasToExcelClipboard, downloadJamasAsPdf, downloadJamasAsImage } from '../utils/excelExport';
 
 interface JamaCardProps {
   jama: Jama;
@@ -27,6 +28,7 @@ export const JamaCard: React.FC<JamaCardProps> = ({
   cycleStartMinutes = 360,
 }) => {
   const {
+    language,
     t,
     getBirdName,
     getActivityName,
@@ -45,6 +47,55 @@ export const JamaCard: React.FC<JamaCardProps> = ({
   };
 
   const [showAllColumns, setShowAllColumns] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+
+  const handleCopyJamaExcel = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const res = await copyJamasToExcelClipboard([jama], {
+      selectedBird,
+      paksha,
+      language,
+      format: 'detailed',
+    });
+    if (res.success) {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2500);
+    }
+  };
+
+  const handleDownloadPdf = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isGeneratingPdf) return;
+    setIsGeneratingPdf(true);
+    try {
+      await downloadJamasAsPdf([jama], {
+        selectedBird,
+        paksha,
+        language,
+        format: 'detailed',
+      });
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
+  const handleDownloadImage = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isGeneratingImage) return;
+    setIsGeneratingImage(true);
+    try {
+      await downloadJamasAsImage([jama], {
+        selectedBird,
+        paksha,
+        language,
+        format: 'detailed',
+      });
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
 
   const birdColumn = jama.columns[selectedBird];
   const mainActDetail = ACTIVITY_DETAILS[birdColumn.mainActivity];
@@ -267,66 +318,179 @@ export const JamaCard: React.FC<JamaCardProps> = ({
             </div>
           ) : (
             /* Multi-Column Comparison Table for all 5 birds in this Jama */
-            <div className="overflow-x-auto rounded-xl border border-[#D9CFBD] dark:border-slate-800 bg-[#FAF6EF] dark:bg-slate-900 shadow-xs">
-              <div className="min-w-[640px]">
-                <div className="grid grid-cols-5 bg-[#EFE7DA] dark:bg-slate-900 text-[11px] font-bold border-b border-[#D9CFBD] dark:border-slate-800">
-                  {(Object.keys(jama.columns) as BirdId[]).map((bKey) => {
-                    const col = jama.columns[bKey];
-                    const bInfo = BIRDS[bKey];
-                    const isFocus = bKey === selectedBird;
-                    const bDisplayName = getBirdName(bKey);
-                    const mainAct = getActivityName(col.mainActivity);
-                    return (
-                      <div
-                        key={bKey}
-                        className={`p-2 border-r border-[#D9CFBD] dark:border-slate-800 last:border-r-0 ${
-                          isFocus ? 'bg-[#1B4332]/10 border-b-2 border-b-[#1B4332] dark:border-b-amber-400' : ''
-                        }`}
-                      >
-                        <div className="flex items-center gap-1.5 mb-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: bInfo.color }} />
-                          <span className={isFocus ? 'text-[#1B4332] dark:text-amber-300 font-extrabold' : 'text-slate-800 dark:text-slate-200'}>{bDisplayName}</span>
-                        </div>
-                        <div className="text-[10px] font-semibold text-slate-600 dark:text-slate-300">{mainAct}</div>
-                      </div>
-                    );
-                  })}
+            <div className="space-y-1.5">
+              {/* Top Controls: Legend + 1-Click Copy for Excel Button */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 px-1 py-1 rounded-lg bg-[#FAF6EF]/60 dark:bg-slate-900/60 border border-[#D9CFBD]/60 dark:border-slate-800/60 text-[10px]">
+                <div className="flex items-center gap-1.5 flex-wrap text-slate-600 dark:text-slate-400">
+                  <span className="font-bold text-slate-700 dark:text-slate-300">
+                    {language === 'ta' ? 'அந்தர்தசை உறவு:' : 'Tags:'}
+                  </span>
+                  <span
+                    className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[9px] font-bold border bg-sky-100 dark:bg-sky-950/70 text-sky-900 dark:text-sky-200 border-sky-300 dark:border-sky-800/80 badge-rel-self"
+                    title={language === 'ta' ? 'S - சுயம் (பட்சியின் சொந்த அந்தர்தசை)' : "S - Self (Bird's Own Sub-period)"}
+                  >
+                    <strong className="font-black text-[9.5px]">S</strong> - {language === 'ta' ? 'சுயம்' : 'Self'}
+                  </span>
+                  <span
+                    className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[9px] font-bold border bg-emerald-100 dark:bg-emerald-950/70 text-emerald-900 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800/80 badge-rel-friend"
+                    title={language === 'ta' ? 'F - நட்பு பட்சி' : 'F - Friend'}
+                  >
+                    <strong className="font-black text-[9.5px]">F</strong> - {language === 'ta' ? 'நட்பு' : 'Friend'}
+                  </span>
+                  <span
+                    className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[9px] font-bold border bg-rose-100 dark:bg-rose-950/70 text-rose-900 dark:text-rose-200 border-rose-300 dark:border-rose-800/80 badge-rel-enemy"
+                    title={language === 'ta' ? 'E - பகை பட்சி' : 'E - Enemy'}
+                  >
+                    <strong className="font-black text-[9.5px]">E</strong> - {language === 'ta' ? 'பகை' : 'Enemy'}
+                  </span>
                 </div>
 
-                {/* 5 Rows of Sub-periods */}
-                {[0, 1, 2, 3, 4].map((subIdx) => (
-                  <div key={subIdx} className="grid grid-cols-5 border-b border-[#D9CFBD]/60 dark:border-slate-800/60 divide-x divide-[#D9CFBD]/60 dark:divide-slate-800/60 text-[11px]">
+                {/* Action Buttons: Copy for Excel + PDF + Image */}
+                <div className="flex items-center gap-1 shrink-0 flex-wrap">
+                  {/* Copy for Excel */}
+                  <button
+                    type="button"
+                    onClick={handleCopyJamaExcel}
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold border transition-all cursor-pointer shrink-0 ${
+                      isCopied
+                        ? 'bg-emerald-600 text-white border-emerald-700 shadow-xs'
+                        : 'bg-[#EFE7DA] dark:bg-slate-800 hover:bg-[#D9CFBD] dark:hover:bg-slate-700 text-[#1B4332] dark:text-emerald-300 border-[#D9CFBD] dark:border-slate-700'
+                    }`}
+                    title={language === 'ta' ? 'இந்த சாமத்தை எக்செல் வடிவத்தில் நகலெடுக்க' : 'Copy this Jama table for Microsoft Excel'}
+                  >
+                    {isCopied ? (
+                      <>
+                        <Check className="w-3 h-3 text-white" />
+                        <span>{language === 'ta' ? 'நகலெடுக்கப்பட்டது!' : 'Copied!'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3 text-[#1B4332] dark:text-emerald-400" />
+                        <span>{language === 'ta' ? 'எக்செல்' : 'Excel'}</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* PDF download */}
+                  <button
+                    type="button"
+                    disabled={isGeneratingPdf}
+                    onClick={handleDownloadPdf}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold border transition-all cursor-pointer bg-[#FAF6EF] dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-700 dark:text-rose-400 border-rose-300 dark:border-rose-900/60"
+                    title={language === 'ta' ? 'இந்த சாமத்தை PDF கோப்பாகப் பதிவிறக்கு' : 'Download this Jama table as PDF'}
+                  >
+                    {isGeneratingPdf ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <FileText className="w-3 h-3" />
+                    )}
+                    <span>PDF</span>
+                  </button>
+
+                  {/* Image download */}
+                  <button
+                    type="button"
+                    disabled={isGeneratingImage}
+                    onClick={handleDownloadImage}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold border transition-all cursor-pointer bg-[#FAF6EF] dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-950/40 text-teal-700 dark:text-teal-400 border-teal-300 dark:border-teal-900/60"
+                    title={language === 'ta' ? 'இந்த சாமத்தை PNG படமாகப் பதிவிறக்கு' : 'Download this Jama table as PNG image'}
+                  >
+                    {isGeneratingImage ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <ImageIcon className="w-3 h-3" />
+                    )}
+                    <span>PNG</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto rounded-xl border border-[#D9CFBD] dark:border-slate-800 bg-[#FAF6EF] dark:bg-slate-900 shadow-xs">
+                <div className="min-w-[640px]">
+                  <div className="grid grid-cols-5 bg-[#EFE7DA] dark:bg-slate-900 text-[11px] font-bold border-b border-[#D9CFBD] dark:border-slate-800">
                     {(Object.keys(jama.columns) as BirdId[]).map((bKey) => {
-                      const sp = jama.columns[bKey].subPeriods[subIdx];
+                      const col = jama.columns[bKey];
+                      const bInfo = BIRDS[bKey];
                       const isFocus = bKey === selectedBird;
-                      const active = isSubPeriodActive(sp);
-                      const subBirdName = getBirdName(sp.birdId);
-                      const actLabel = getActivityName(sp.activity);
+                      const bDisplayName = getBirdName(bKey);
+                      const mainAct = getActivityName(col.mainActivity);
 
                       return (
                         <div
                           key={bKey}
-                          className={`p-1.5 transition-colors ${
-                            active
-                              ? 'bg-[#C29738]/20 font-bold text-slate-950 dark:text-white'
-                              : isFocus
-                              ? 'bg-[#1B4332]/5 dark:bg-slate-900/40 text-slate-800 dark:text-slate-300'
-                              : 'text-slate-600 dark:text-slate-400'
+                          className={`p-2 border-r border-[#D9CFBD] dark:border-slate-800 last:border-r-0 ${
+                            isFocus ? 'bg-[#1B4332]/10 border-b-2 border-b-[#1B4332] dark:border-b-amber-400' : ''
                           }`}
                         >
-                          <div className="flex items-center justify-between text-[9px] mb-0.5">
-                            <span className="font-semibold text-slate-700 dark:text-slate-300">{subBirdName}</span>
-                            <span className="text-[#C29738] dark:text-amber-400 font-mono">{sp.star}★</span>
+                          <div className="flex items-center justify-between gap-1 mb-0.5">
+                            <div className="flex items-center gap-1 min-w-0">
+                              <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: bInfo.color }} />
+                              <span className={`truncate ${isFocus ? 'text-[#1B4332] dark:text-amber-300 font-extrabold' : 'text-slate-800 dark:text-slate-200 font-bold'}`}>
+                                {bDisplayName}
+                              </span>
+                            </div>
+                            {isFocus && (
+                              <span className="text-[8px] bg-[#1B4332] dark:bg-emerald-700 text-white px-1 py-0.2 rounded font-bold shrink-0">
+                                {language === 'ta' ? 'தேர்வு' : 'Active'}
+                              </span>
+                            )}
                           </div>
-                          <div className="font-bold text-slate-900 dark:text-slate-200 text-[10px]">{actLabel}</div>
-                          <div className="text-[9px] text-slate-400 dark:text-slate-500 font-mono mt-0.5">
-                            {sp.startTime} - {sp.endTime}
+                          <div className="flex items-center justify-between text-[10px] font-semibold text-slate-600 dark:text-slate-300">
+                            <span className="truncate">{mainAct}</span>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                ))}
+
+                  {/* 5 Rows of Sub-periods */}
+                  {[0, 1, 2, 3, 4].map((subIdx) => (
+                    <div key={subIdx} className="grid grid-cols-5 border-b border-[#D9CFBD]/60 dark:border-slate-800/60 divide-x divide-[#D9CFBD]/60 dark:divide-slate-800/60 text-[11px]">
+                      {(Object.keys(jama.columns) as BirdId[]).map((bKey) => {
+                        const sp = jama.columns[bKey].subPeriods[subIdx];
+                        const isFocus = bKey === selectedBird;
+                        const active = isSubPeriodActive(sp);
+                        const subBirdName = getBirdName(sp.birdId);
+                        const actLabel = getActivityName(sp.activity);
+                        const spRel = getBirdRelationship(bKey, sp.birdId, paksha);
+                        const spTagInfo = getRelationshipTag(spRel);
+                        const spRelLabel = language === 'ta' ? spTagInfo.labelTa : spTagInfo.labelEn;
+
+                        return (
+                          <div
+                            key={bKey}
+                            className={`p-1.5 transition-colors ${
+                              active
+                                ? 'bg-[#C29738]/20 font-bold text-slate-950 dark:text-white'
+                                : isFocus
+                                ? 'bg-[#1B4332]/5 dark:bg-slate-900/40 text-slate-800 dark:text-slate-300'
+                                : 'text-slate-600 dark:text-slate-400'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between text-[9px] mb-0.5">
+                              <div className="flex items-center gap-1 min-w-0">
+                                <span className="font-semibold text-slate-700 dark:text-slate-300 truncate">
+                                  {subBirdName}
+                                </span>
+                                <span
+                                  title={`${spTagInfo.tag} - ${spRelLabel}`}
+                                  className={`inline-block font-black text-[7.5px] px-1 py-0 rounded border shrink-0 ${spTagInfo.badgeBg} ${spTagInfo.badgeText} ${spTagInfo.badgeBorder}`}
+                                >
+                                  {spTagInfo.tag}
+                                </span>
+                              </div>
+                              <span className="text-[#C29738] dark:text-amber-400 font-mono font-bold shrink-0">{sp.star}★</span>
+                            </div>
+                            <div className="font-bold text-slate-900 dark:text-slate-200 text-[10px]">{actLabel}</div>
+                            <div className="text-[9px] text-slate-400 dark:text-slate-500 font-mono mt-0.5">
+                              {sp.startTime} - {sp.endTime}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
